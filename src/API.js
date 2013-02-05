@@ -172,31 +172,40 @@ exports = Class(lib.PubSub, function() {
 		jsio("import src.Application as Application");
 
 		Application.prototype.__root = true;
-		var app = this.app = new Application();
+		this.app = new Application();
+		this.buildEngine({view: this.app});
+		return this.app;
+	}
 
-		if (!(app instanceof ui.View)) {
+	this.buildEngine = function (opts) {
+		if (!opts) { opts = {}; }
+		if (!opts.entry) { opts.entry = 'launchUI'; }
+
+		var view = opts.view;
+		if (!view) {
+			throw "a timestep.Engine must be created with a root view";
+		}
+
+		if (!(view instanceof ui.View)) {
 			throw "src/Application.js must export a Class that inherits from ui.View";
 		}
 
-		app.subscribe('onLoadError', this, '_onAppLoadError');
-
-		if (!entry) { entry = 'launchUI'; }
+		view.subscribe('onLoadError', this, '_onAppLoadError');
 
 		var launch;
-		if (typeof app[entry] == 'function') {
-			launch = bind(app, entry);
+		if (typeof view[opts.entry] == 'function') {
+			launch = bind(view, opts.entry);
 		}
 
-		app.view = app; // legacy, deprecated
-		app.engine = new ui.Engine({view: app});
-		app.engine.show();
-		app.engine.startLoop();
+		view.view = view; // legacy, deprecated
+		view.engine = new ui.Engine(opts);
+		view.engine.show();
+		view.engine.startLoop();
 
 		try {
+			view.initUI && view.initUI();
 
-			app.initUI && app.initUI();
-
-			var settings = app._settings || {};
+			var settings = view._settings || {};
 			var preload = settings.preload;
 			var autoHide = CONFIG.preload && (CONFIG.preload.autoHide !== false);
 			if (preload && preload.length) {
@@ -217,8 +226,6 @@ exports = Class(lib.PubSub, function() {
 			this._onAppLoadError(error);
 			throw error;
 		}
-
-		return this.app;
 	};
 
 	this._onAppLoadError = function(error) {
