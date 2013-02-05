@@ -61,75 +61,85 @@ if (DEBUG) {
 }
 
 // setup timestep device API
+var startApp = function () {
+	import device;
+	import platforms.browser.initialize;
+	device.init();
 
-import device;
-import platforms.browser.initialize;
-device.init();
-
-// logging
-
-if (DEBUG) {
 	// logging
-	var initLogging = function (type, setPrefix) {
-		if (setPrefix) {
-			//once chrome stable upgrades to chrome 24, we can actually style this stuff with CSS!
-			logging.setPrefix(window._name + ': ', type);
-		}
-		
-		import ..debugging.debugLogger as debugLogger;
 
-		if (window.parent != window) { // are we in an iframe?
-			debugLogger.initLocalInspector();
-		} else if (device.isMobileBrowser) {
-			import net.env.browser.csp as csp;
-			debugLogger.connect(csp.Connector, {url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'});
-		}
-	};
-
-	var initDebugging = function () {
-		var env = jsio.__env;
-		
-		var originalSyntax = bind(env, env.checkSyntax);
-		var originalFetch = bind(env, env.fetch);
-
-		env.fetch = function(filename) {
-			logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
-			return originalFetch.apply(this, arguments);
-		}
-		
-		env.checkSyntax = function(code, filename) {
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/.syntax', false);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState != 4) { return; }
-			
-				if (xhr.status == 200 && xhr.responseText) {
-					var err;
-					try {
-						var response = JSON.parse(xhr.responseText);
-						err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
-					} catch(e) {
-						err = xhr.responseText;
-					}
-
-					console.log(err);
-					
-					document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
-				} else if (xhr.status > 0) {
-					originalSyntax(code, filename);
-				}
+	if (DEBUG) {
+		// logging
+		var initLogging = function (type, setPrefix) {
+			if (setPrefix) {
+				//once chrome stable upgrades to chrome 24, we can actually style this stuff with CSS!
+				logging.setPrefix(window._name + ': ', type);
 			}
-		
-			xhr.send('javascript=' + encodeURIComponent(code));
-		}
-	};
 
-	var displayName = uri.hash('displayName');
-	initLogging(displayName, true);
-	initDebugging();
+			import ..debugging.debugLogger as debugLogger;
+
+			if (window.parent != window) { // are we in an iframe?
+				debugLogger.initLocalInspector();
+			} else if (device.isMobileBrowser) {
+				import net.env.browser.csp as csp;
+				debugLogger.connect(csp.Connector, {url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'});
+			}
+		};
+
+		var initDebugging = function () {
+			var env = jsio.__env;
+
+			var originalSyntax = bind(env, env.checkSyntax);
+			var originalFetch = bind(env, env.fetch);
+
+			env.fetch = function(filename) {
+				logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
+				return originalFetch.apply(this, arguments);
+			}
+
+			env.checkSyntax = function(code, filename) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/.syntax', false);
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState != 4) { return; }
+
+					if (xhr.status == 200 && xhr.responseText) {
+						var err;
+						try {
+							var response = JSON.parse(xhr.responseText);
+							err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
+						} catch(e) {
+							err = xhr.responseText;
+						}
+
+						console.log(err);
+
+						document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
+					} else if (xhr.status > 0) {
+						originalSyntax(code, filename);
+					}
+				}
+
+				xhr.send('javascript=' + encodeURIComponent(code));
+			}
+		};
+
+		var displayName = uri.hash('displayName');
+		initLogging(displayName, true);
+		initDebugging();
+	}
+
+	// init sets up the GC object
+	import gc.API;
+	GC.buildApp('launchUI');
+};
+
+import ..timemachine.launch.LaunchBrowser as LaunchBrowser;
+var launchBrowser = new LaunchBrowser();
+if (launchBrowser.useTimeMachine()) {
+	import ..timemachine.TimeMachine as TimeMachine;
+	GLOBAL.CONFIG.timeMachine = new TimeMachine({cb: startApp, launch: launchBrowser});
+} else {
+	startApp();
 }
-
-// init sets up the GC object
-import gc.API;
-GC.buildApp('launchUI');

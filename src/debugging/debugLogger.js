@@ -67,7 +67,7 @@ if (DEBUG) {
 				if (view instanceof ui.TextView) {
 					var text = view.getText();
 				}
-				
+
 				var s = view.style;
 				return {
 					x: s.x,
@@ -102,7 +102,7 @@ if (DEBUG) {
 						width: opts.width,
 						height: opts.height,
 						scale: opts.scale,
-						
+
 						scaleMethod: img.scaleMethod,
 						slices: img.slices,
 
@@ -253,7 +253,7 @@ if (DEBUG) {
 						}
 						buffer = [];
 					}
-					
+
 					// send log
 					conn.sendEvent('LOG', args);
 				}
@@ -352,7 +352,7 @@ if (DEBUG) {
 		var tick = 0;
 		var maxColor = 255;
 		var minColor = 100;
-		
+
 		//render the highlighted view
 		var _now = +new Date();
 		var _t = 0;
@@ -360,14 +360,14 @@ if (DEBUG) {
 			ctx.save();
 			ctx.translate(pos.x, pos.y);
 			ctx.rotate(pos.r);
-			
+
 			// pulsate the blue
 			tick += -(_now - (_now = new Date()));
 
 			var weight = (Math.sin(2 * Math.PI * tick / 1000) + 1) / 2;
 			var val = (weight * (maxColor - minColor)) + minColor | 0;
 
-			
+
 			var color = '0,' + (val * .7 | 0) + ',' + (val | 0);
 
 			ctx.strokeStyle = 'rgba(' + color + ', 0.7)';
@@ -418,7 +418,7 @@ if (DEBUG) {
 				clearInterval(this._tick);
 			}
 		}
-		
+
 		this.setEnabled = function (isEnabled) {
 			this._isEnabled = isEnabled;
 			if (OverlayRenderer.ctx) {
@@ -602,11 +602,11 @@ if (DEBUG) {
 
 			this.onInputMoveCapture = function (evt, pt, allEvt, allPt) {
 				var trace = [];
-				
+
 				//loop backwards through the trace
 				for (var i = evt.trace.length - 1, view; view = evt.trace[i]; --i) {
 					trace.push(view.uid);
-					
+
 					var superview = view.getSuperview();
 					while (superview && superview != evt.trace[i + 1]) {
 						trace.push(superview.uid);
@@ -625,7 +625,7 @@ if (DEBUG) {
 
 			this.onInputSelectCapture = function (e) {
 				//only send event if shift click
-				
+
 
 				var evt = {pt: [], trace: [], depth: 0};
 				var pt = new Point(e.pageX, e.pageY);
@@ -647,21 +647,21 @@ if (DEBUG) {
 					y: pt.y,
 					trace: trace
 				};
-				
+
 				this.conn.sendEvent('INPUT_SELECT', data);
 			}
 
-			
+
 
 			this.traceEvt = function(view, evt, pt, depth) {
 				depth = depth || 0;
 
 				var localPt = view.style.localizePoint(new Point(pt));
-				
+
 				//if the point is contained add it to the trace
-				if (view.containsLocalPoint(localPt)) { 
+				if (view.containsLocalPoint(localPt)) {
 					evt.trace.unshift({view: view, depth: depth});
-					evt.pt[view.uid] = localPt; 
+					evt.pt[view.uid] = localPt;
 				}
 
 				var subviews = view.getSubviews();
@@ -679,7 +679,7 @@ if (DEBUG) {
 
 			this.onMouseMoveCapture = function (e) {
 				//$.stopEvent(e);
-				
+
 				//get the event to the active target
 				var mockEvt = {pt: [], trace: [], depth: 0};
 				var mockPt = new Point(e.pageX, e.pageY);
@@ -695,7 +695,7 @@ if (DEBUG) {
 			// to initialize the remote inspector
 			if (GC.app) {
 				conn.sendEvent('APP_READY', {uid: GC.app.view.uid});
-
+				conn.sendEvent('TIME_MACHINE', {timeMachine: CONFIG.timeMachine || false});
 				GC.app.engine.unsubscribe('Render', this);
 				GC.app.engine.subscribe('Render', this._overlay, 'render');
 			}
@@ -845,8 +845,8 @@ if (DEBUG) {
 			var view = _DEBUG.getViewByID(uid);
 			var newImg = new Image();
 
-			newImg._srcImg.addEventListener("load", function() {
-				var map = newImg._map;	
+			newImg._srcImg.addEventListener("load", function () {
+				var map = newImg._map;
 				map.width = newImg._srcImg.width,
 				map.height = newImg._srcImg.height,
 				map.x = 0;
@@ -854,7 +854,7 @@ if (DEBUG) {
 				view.setImage(newImg);
 				view.needsRepaint();
 			}, false);
-		
+
 			newImg._srcImg.src = imgData;
 		});
 
@@ -940,7 +940,7 @@ if (DEBUG) {
 				if (_pollView) {
 					var eventData = _pollView.getPosition();
 					eventData.uid = _pollView.uid;
-					
+
 					conn.sendEvent('POLL_VIEW_POSITION', eventData);
 				}
 			}
