@@ -18,7 +18,7 @@
 import lib.Enum;
 
 // TODO: add isMobileNative and isMobileBrowser into resolutions.js (don't need to do a lookup) and remove these Enums
-var mobile = new lib.Enum('ipad', 'iphone', 'ios', 'nexus');
+var mobile = new lib.Enum('ipad', 'iphone5', 'iphone', 'ios', 'nexus');
 var mobileBrowser = new lib.Enum('iphone-browser', 'ipad-browser', 'nexus-s-browser');
 
 exports.simulate = function(params) {
