@@ -207,7 +207,7 @@ exports = Class(lib.PubSub, function() {
 
 			var settings = view._settings || {};
 			var preload = settings.preload;
-			var autoHide = CONFIG.preload && (CONFIG.preload.autoHide !== false);
+			var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
 			if (preload && preload.length) {
 				var cb = new lib.Callback();
 				for (var i = 0, group; group = preload[i]; ++i) {
@@ -230,17 +230,17 @@ exports = Class(lib.PubSub, function() {
 
 	this._onAppLoadError = function(error) {
 		logger.error('encountered error when creating src Application: ', JSON.stringify(error));
-		var preloader = CONFIG.preload;
-		if(preloader && preloader.onAppLoadError) {
-			preloader.onAppLoadError(error);
+		var splash = CONFIG.splash;
+		if (splash && splash.onAppLoadError) {
+			splash.onAppLoadError(error);
 		}
 	};
 
 	this.hidePreloader = function(cb) {
-		var preloader = CONFIG.preload;
-		if (preloader && preloader.hide && !preloader.hidden) {
-			preloader.hide(cb);
-			preloader.hidden = true;
+		var splash = CONFIG.splash;
+		if (splash && splash.hide && !splash.hidden) {
+			splash.hide(cb);
+			splash.hidden = true;
 		} else {
 			cb && cb();
 		}

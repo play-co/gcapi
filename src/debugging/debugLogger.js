@@ -497,9 +497,9 @@ if (DEBUG) {
 
 	exports.handleInspectorRequests = function (conn) {
 
-		if (CONFIG.preload) {
-			var prevHide = CONFIG.preload.hide;
-			CONFIG.preload.hide = function () {
+		if (CONFIG.splash) {
+			var prevHide = CONFIG.splash.hide;
+			CONFIG.splash.hide = function () {
 				prevHide && prevHide.apply(this, arguments);
 				if (conn) {
 					conn.onConnect(function () {

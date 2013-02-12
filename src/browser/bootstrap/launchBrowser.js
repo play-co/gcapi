@@ -29,7 +29,7 @@ var delegate;
 var callDelegate = function(f) { if (delegate[f]) { return delegate[f].apply(delegate, Array.prototype.slice.call(arguments, 1)); }};
 
 // Setup
-var controller = CONFIG.preload || {};
+var controller = CONFIG.splash || {};
 var d = document;
 var el = d.body.appendChild(d.createElement('canvas'));
 
@@ -131,14 +131,24 @@ if (jsio.__jsio.__srcCache['./src/LoadingDelegate.js']) {
 } else {
 	delegate = {
 		init: function () {
-			// default background image
-			if (controller.img) {
+			var img = null;
+			jsio("import device");
+			// If landscape mode,
+			if (device && device.width > device.height) {
+				img = controller.landscape768;
+				if (!img) img = controller.landscape1536;
+			} else {
+				img = controller.portrait480;
+				if (!img) img = controller.portrait960;
+				if (!img) img = controller.portrait1024;
+				if (!img) img = controller.portrait1136;
+				if (!img) img = controller.portrait2048;
+			}
+			if (img) {
 				jsio("import .ImageView");
 				new loader.ImageView({
-					image: controller.img,
-					scaleMethod: controller.scaleMethod,
-					align: controller.imgAlign,
-					verticalAlign: controller.imgVerticalAlign
+					image: img,
+					scaleMethod: controller.scaleMethod
 				});
 			}
 

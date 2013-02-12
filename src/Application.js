@@ -47,7 +47,7 @@ exports = Class(ui.StackView, function (supr) {
 
 		var settings = app._settings || {};
 		var preload = settings.preload;
-		var autoHide = CONFIG.preload && (CONFIG.preload.autoHide !== false);
+		var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
 		if (preload && preload.length) {
 			var cb = new lib.Callback();
 			for (var i = 0, group; group = preload[i]; ++i) {
