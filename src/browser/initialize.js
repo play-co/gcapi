@@ -73,8 +73,8 @@ if (device.isMobileBrowser) {
 		
 		var totalW = (isPortrait ? screen.width : screen.height);
 		var totalH = (isPortrait ? screen.height : screen.width);
-//		document.body.style.height = Math.max(screen.width, screen.height) + 'px';
-//		device.hideAddressBar();
+		//document.body.style.height = Math.max(screen.width, screen.height) + 'px';
+		//device.hideAddressBar();
 
 		var innerWidth = window.innerWidth;
 		var innerHeight = window.innerHeight;
