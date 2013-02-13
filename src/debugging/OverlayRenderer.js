@@ -77,7 +77,19 @@ if (DEBUG) {
 			ctx.restore();
 		}
 
-		if (device.simulating && document.body && document.body.appendChild) {
+		var element = document.createElement('x');
+		var documentElement = document.documentElement;
+		var getComputedStyle = window.getComputedStyle;
+		var supportsPointerEvents = false;
+		if('pointerEvents' in element.style) {
+			element.style.pointerEvents = 'auto';
+			element.style.pointerEvents = 'x';
+			documentElement.appendChild(element);
+			supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+			documentElement.removeChild(element);
+		}
+
+		if (device.simulating && document.body && document.body.appendChild && supportsPointerEvents) {
 			var canvas = new (device.get('Canvas'))();
 			canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 1000; pointer-events: none;';
 			document.body.appendChild(canvas);
