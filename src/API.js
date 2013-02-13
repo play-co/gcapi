@@ -34,6 +34,11 @@ if (device.simulatingMobileNative) {
 if (!GLOBAL.CONFIG) { GLOBAL.CONFIG = {}; }
 if (!GLOBAL.DEBUG) { GLOBAL.DEBUG = false; }
 
+if (GLOBAL.CONFIG.isMuted) {
+	import AudioManager;
+	GLOBAL.ACCESSIBILITY.mute(true);
+}
+
 exports = Class(lib.PubSub, function() {
 
 	var ua = navigator.userAgent;
