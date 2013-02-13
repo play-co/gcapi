@@ -141,9 +141,13 @@ exports = Class(lib.PubSub, function() {
 
 	// import .OverlayAPI;
 	// GC.overlay = new OverlayAPI(this.env);
+	
+	var map;
 
 	try {
-		var map = JSON.parse(GLOBAL.CACHE['spritesheets/map.json']);
+		if (GLOBAL.CACHE) {
+			map = JSON.parse(GLOBAL.CACHE['spritesheets/map.json']);
+		}
 	} catch (e) {
 		logger.warn("spritesheet map failed to parse", e);
 	}
