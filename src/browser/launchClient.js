@@ -26,6 +26,11 @@ if (!window.JSON) {
 	jsio('import std.JSON').createGlobal();
 }
 
+if (!window.console) {
+	window.console = {};
+	window.console.log = window.console.info = window.console.error = window.console.warn = function () {};
+}
+
 if (!window.localStorage) {
 	window.localStorage = {
 		getItem: function() {},
@@ -34,12 +39,14 @@ if (!window.localStorage) {
 	}
 }
 
-// device simulation
+// parsing options
+import std.uri;
+var uri = new std.uri(window.location);
+var mute = uri.hash('mute');
+CONFIG.isMuted = mute != undefined && mute != "false" && mute != "0" && mute != "no";
 
 if (DEBUG) {
-	// parsing options
-	import std.uri;
-	var uri = new std.uri(window.location);
+	// device simulation
 
 	// simulate device chrome, input, and userAgent
 	var sim_device = uri.query('device') || uri.hash('device');
