@@ -128,12 +128,18 @@ if (DEBUG) {
 			});
 
 			conn.onRequest.subscribe('SCREENSHOT', this, function (req) {
-				var canv = document.getElementsByTagName('canvas')[0]
-				req.respond({
-					width: canv.width,
-					height: canv.height,
-					canvasImg: canv.toDataURL('image/png')
-				});
+				var canv = GC.app.engine.getElement();
+				if (canv && canv.toDataURL) {
+					req.respond({
+						width: canv.width,
+						height: canv.height,
+						canvasImg: canv.toDataURL('image/png')
+					});
+				} else {
+					req.error({
+						NOT_SUPPORTED: true
+					});
+				}
 			});
 
 			conn.onEvent.subscribe('MUTE', this, function (evt) {
