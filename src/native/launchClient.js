@@ -51,7 +51,7 @@ function initLogging(type, setPrefix) {
 	}
 
 	if (DEBUG && host) {
-		import ..debugging.debugLogger as debugLogger;
+		import ..debugging.timestepInspector as debugLogger;
 		debugLogger.connect && debugLogger.connect(socketTransport.Connector, {
 			host: host,
 			port: 9226
