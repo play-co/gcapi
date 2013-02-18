@@ -84,8 +84,8 @@ function startApp (conn) {
 
 	if (DEBUG) {
 
-		import ..debugging.TimestepInspector;
-		conn.addClient(new debugging.TimestepInspector());
+		import ..debugging.timestepInspector;
+		conn.addClient(new debugging.timestepInspector());
 
 		var initDebugging = function () {
 			var env = jsio.__env;
