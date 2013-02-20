@@ -67,7 +67,7 @@ if (DEBUG) {
 	exports = Class(function () {
 		this.init = function (conn) {
 			this._overlay = new OverlayRenderer();
-		}
+		};
 
 		this.setConn = function (conn) {
 			this._conn = conn;
@@ -153,10 +153,10 @@ if (DEBUG) {
 
 				if (_paused) {
 					app.engine.resume();
-					exports._overlay.stopTick();
+					this._overlay.stopTick();
 				} else {
 					app.engine.pause();
-					exports._overlay.startTick();
+					this._overlay.startTick();
 				}
 				_paused = !_paused;
 			});

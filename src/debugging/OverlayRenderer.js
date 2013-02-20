@@ -65,9 +65,9 @@ if (DEBUG) {
 			ctx.fillRect(-7, -0.5, 14, 1);
 
 			ctx.restore();
-		}
+		};
 
-		function renderSelected(pos, ctx) {
+		function renderSelected (pos, ctx) {
 			ctx.save();
 			ctx.translate(pos.x, pos.y);
 			ctx.rotate(pos.r);
@@ -75,18 +75,20 @@ if (DEBUG) {
 			ctx.lineWidth = 1;
 			ctx.strokeRect(-0.5, -0.5, pos.width + 1, pos.height + 1);
 			ctx.restore();
-		}
+		};
 
 		var element = document.createElement('x');
 		var documentElement = document.documentElement;
 		var getComputedStyle = window.getComputedStyle;
 		var supportsPointerEvents = false;
-		if('pointerEvents' in element.style) {
-			element.style.pointerEvents = 'auto';
-			element.style.pointerEvents = 'x';
-			documentElement.appendChild(element);
-			supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
-			documentElement.removeChild(element);
+		if (element) {
+			if('pointerEvents' in element.style) {
+				element.style.pointerEvents = 'auto';
+				element.style.pointerEvents = 'x';
+				documentElement.appendChild(element);
+				supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+				documentElement.removeChild(element);
+			}
 		}
 
 		if (device.simulating && document.body && document.body.appendChild && supportsPointerEvents) {
@@ -101,21 +103,21 @@ if (DEBUG) {
 		this.startTick = function () {
 			this.stopTick();
 			this._tick = setInterval(bind(this, 'render'), 1000 / 30);
-		}
+		};
 
 		// used to stop renderer's timer when app is unpaused
 		this.stopTick = function () {
 			if (this._tick) {
 				clearInterval(this._tick);
 			}
-		}
+		};
 
 		this.setEnabled = function (isEnabled) {
 			this._isEnabled = isEnabled;
 			if (OverlayRenderer.ctx) {
 				OverlayRenderer.ctx.clear();
 			}
-		}
+		};
 
 		this.render = function (ctx) {
 			// if (!this._isEnabled) { return; }
@@ -141,7 +143,7 @@ if (DEBUG) {
 				var pos = view && view.getPosition();
 				if (pos) renderSelected(pos, ctx);
 			}
-		}
+		};
 	});
 }
 
