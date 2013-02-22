@@ -28,38 +28,29 @@ if (DEBUG) {
 	exports.getConn = function () { return _conn; }
 
 	exports.connect = function (opts, cb) {
-		var transport;
-
-		if (typeof opts === "function") {
-			cb = opts;
-			transport = false;
-		} else {
-			transport = opts.transport;
-			opts = opts.opts;
-		}
-
-		_conn = new DebugConn();
+		var transport = opts && opts.transport;
+		var connectOpts = opts && opts.opts;
 
 		if (!transport) {
 			if (window.parent != window) {
 				// in iframe
 				transport = 'postmessage';
-				opts = {
+				connectOpts = {
 					port: '__debug_timestep_inspector_' + window.location.port + '__',
 					win: window.parent
 				};
 			} else {
 				// assume we're on a mobile device
 				transport = 'csp';
-				opts = {
+				connectOpts = {
 					url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'
 				};
 			}
-
-			net.connect(_conn, transport, opts);
 		}
 
+		_conn = new DebugConn();
 		_conn.onConnect(bind(GLOBAL, cb, _conn));
+		net.connect(_conn, transport, connectOpts);
 
 		return _conn;
 	}

@@ -67,7 +67,7 @@ if (DEBUG) {
 	}
 
 	import ..debugging.connect;
-	debugging.connect.connect(startApp);
+	debugging.connect.connect(null, startApp);
 } else {
 	startApp();
 }
