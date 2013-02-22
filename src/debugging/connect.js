@@ -27,28 +27,37 @@ if (DEBUG) {
 
 	exports.getConn = function () { return _conn; }
 
-	exports.connect = function (cb) {
-		_conn = new DebugConn();
-
+	exports.connect = function (opts, cb) {
 		var transport;
-		var opts;
 
-		// are we in an iframe?
-		if (window.parent != window) {
-			transport = 'postmessage';
-			opts = {
-				port: '__debug_timestep_inspector_' + window.location.port + '__',
-				win: window.parent
-			};
+		if (typeof opts === "function") {
+			cb = opts;
+			transport = false;
 		} else {
-			// assume we're on a mobile device
-			transport = 'csp';
-			opts = {
-				url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'
-			};
+			transport = opts.transport;
+			opts = opts.opts;
 		}
 
-		net.connect(_conn, transport, opts);
+		_conn = new DebugConn();
+
+		if (!transport) {
+			if (window.parent != window) {
+				// in iframe
+				transport = 'postmessage';
+				opts = {
+					port: '__debug_timestep_inspector_' + window.location.port + '__',
+					win: window.parent
+				};
+			} else {
+				// assume we're on a mobile device
+				transport = 'csp';
+				opts = {
+					url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'
+				};
+			}
+
+			net.connect(_conn, transport, opts);
+		}
 
 		_conn.onConnect(bind(GLOBAL, cb, _conn));
 

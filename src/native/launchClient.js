@@ -32,16 +32,8 @@ common.install();
 
 import .socketTransport;
 
-function initLogging(type, setPrefix) {
-
-	if (setPrefix) {
-		logging.setPrefix(type);
-	}
-	
-	// prefix filenames in the debugger
-	jsio.__env.debugPath = function(path) { return '[' + type + ']:' + path; };
-	
-	logger.log('init debugging', jsio.__env.getCwd());
+if (window.DEBUG_WAIT) {
+	import ..debugging.connect;
 
 	var cwd = jsio.__env.getCwd();
 	var match = /https?:\/\/([^:]*).*/.exec(cwd);
@@ -50,15 +42,36 @@ function initLogging(type, setPrefix) {
 		host = match[1];
 	}
 
-	if (DEBUG && host) {
-		import ..debugging.TimestepInspector as debugLogger;
-		debugLogger.connect && debugLogger.connect(socketTransport.Connector, {
+	debugging.connect.connect({
+		transport: socketTransport.Connector,
+		opts: {
 			host: host,
 			port: 9226
-		});
+		}
+	}, startApp);
+} else {
+	startApp();
+}
+
+function startApp (conn) {
+	if (conn) {
+		import ..debugging.TimestepInspector;
+		conn.addClient(new debugging.TimestepInspector());
+	}
+
+	var type = "Client";
+	//logging.setPrefix(type);
+	
+	// prefix filenames in the debugger
+	jsio.__env.debugPath = function(path) { return '[' + type + ']:' + path; };
+	
+	logger.log('init debugging', jsio.__env.getCwd());
+
+	import gc.API;
+	GC.buildApp('launchUI');
+
+	if (conn) {
+		conn.setApp(GC.app);
 	}
 }
 
-initLogging('Client', false);
-import gc.API;
-GC.buildApp('launchUI');
