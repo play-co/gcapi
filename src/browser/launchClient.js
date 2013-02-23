@@ -26,6 +26,11 @@ if (!window.JSON) {
 	jsio('import std.JSON').createGlobal();
 }
 
+if (!window.console) {
+	window.console = {};
+	window.console.log = window.console.info = window.console.error = window.console.warn = function () {};
+}
+
 if (!window.localStorage) {
 	window.localStorage = {
 		getItem: function() {},
@@ -34,12 +39,14 @@ if (!window.localStorage) {
 	}
 }
 
-// device simulation
+// parsing options
+import std.uri;
+var uri = new std.uri(window.location);
+var mute = uri.hash('mute');
+CONFIG.isMuted = mute != undefined && mute != "false" && mute != "0" && mute != "no";
 
 if (DEBUG) {
-	// parsing options
-	import std.uri;
-	var uri = new std.uri(window.location);
+	// device simulation
 
 	// simulate device chrome, input, and userAgent
 	var sim_device = uri.query('device') || uri.hash('device');
@@ -58,78 +65,80 @@ if (DEBUG) {
 			logger.error(e);
 		}
 	}
+
+	import ..debugging.connect;
+	debugging.connect.connect(null, startApp);
+} else {
+	startApp();
 }
 
-// setup timestep device API
+function startApp (conn) {
 
-import device;
-import platforms.browser.initialize;
-device.init();
+	// setup timestep device API
 
-// logging
+	import device;
+	import platforms.browser.initialize;
+	device.init();
 
-if (DEBUG) {
 	// logging
-	var initLogging = function (type, setPrefix) {
-		if (setPrefix) {
-			//once chrome stable upgrades to chrome 24, we can actually style this stuff with CSS!
-			logging.setPrefix(window._name + ': ', type);
-		}
-		
-		import ..debugging.debugLogger as debugLogger;
 
-		if (window.parent != window) { // are we in an iframe?
-			debugLogger.initLocalInspector();
-		} else if (device.isMobileBrowser) {
-			import net.env.browser.csp as csp;
-			debugLogger.connect(csp.Connector, {url: 'http://' + window.location.host + '/plugins/native_debugger/mobile_csp'});
-		}
-	};
+	if (DEBUG) {
 
-	var initDebugging = function () {
-		var env = jsio.__env;
-		
-		var originalSyntax = bind(env, env.checkSyntax);
-		var originalFetch = bind(env, env.fetch);
+		import ..debugging.TimestepInspector;
+		conn.addClient(new debugging.TimestepInspector());
 
-		env.fetch = function(filename) {
-			logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
-			return originalFetch.apply(this, arguments);
-		}
-		
-		env.checkSyntax = function(code, filename) {
-			var xhr = new XMLHttpRequest();
-			xhr.open('POST', '/.syntax', false);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState != 4) { return; }
+		var initDebugging = function () {
+			var env = jsio.__env;
 			
-				if (xhr.status == 200 && xhr.responseText) {
-					var err;
-					try {
-						var response = JSON.parse(xhr.responseText);
-						err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
-					} catch(e) {
-						err = xhr.responseText;
-					}
+			var originalSyntax = bind(env, env.checkSyntax);
+			var originalFetch = bind(env, env.fetch);
 
-					console.log(err);
-					
-					document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
-				} else if (xhr.status > 0) {
-					originalSyntax(code, filename);
-				}
+			env.fetch = function(filename) {
+				logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
+				return originalFetch.apply(this, arguments);
 			}
-		
-			xhr.send('javascript=' + encodeURIComponent(code));
+			
+			env.checkSyntax = function(code, filename) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/.syntax', false);
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState != 4) { return; }
+				
+					if (xhr.status == 200 && xhr.responseText) {
+						var err;
+						try {
+							var response = JSON.parse(xhr.responseText);
+							err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
+						} catch(e) {
+							err = xhr.responseText;
+						}
+
+						console.log(err);
+						
+						document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
+					} else if (xhr.status > 0) {
+						originalSyntax(code, filename);
+					}
+				}
+			
+				xhr.send('javascript=' + encodeURIComponent(code));
+			}
+		};
+
+		if (device.isMobileBrowser) {
+			conn.initLogProxy();
+			conn.initRemoteEval();
 		}
-	};
 
-	var displayName = uri.hash('displayName');
-	initLogging(displayName, true);
-	initDebugging();
+		initDebugging();
+	}
+
+	// init sets up the GC object
+	import gc.API;
+	GC.buildApp('launchUI');
+
+	if (DEBUG) {
+		conn.setApp(GC.app);
+	}
 }
-
-// init sets up the GC object
-import gc.API;
-GC.buildApp('launchUI');
