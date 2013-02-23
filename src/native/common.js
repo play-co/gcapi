@@ -45,9 +45,9 @@ exports.install = function(TeaLeaf, hostname) {
 
 	// publisher for the overlay UIWebView
 	NATIVE.overlay.delegate = new lib.PubSub();
-	CONFIG.preload = CONFIG.preload || {};
-	var oldHide = CONFIG.preload.hide || function(){};
-	CONFIG.preload.hide = function (cb) {
+	CONFIG.splash = CONFIG.splash || {};
+	var oldHide = CONFIG.splash.hide || function(){};
+	CONFIG.splash.hide = function (cb) {
 		if (NATIVE.doneLoading instanceof Function) {
 			NATIVE.doneLoading();
 		}

@@ -58,7 +58,16 @@ NATIVE.dialogs.showCrossPromo = function(appID, displayName, image) {
 NATIVE.dialogs.showAppRater = function(title, text, image) {
 	title = title || "Rate " + CONFIG.title;
 	text = text || "It looks like you're enjoying " + CONFIG.title + ". Please take a moment to rate it. Thanks!";
-	image = image || CONFIG.preload && CONFIG.preload.img;
+	if (!image) {
+		var splash = CONFIG.splash;
+		image = splash.landscape768;
+		if (!image) image = splash.landscape1536;
+		if (!image) image = splash.portrait480;
+		if (!image) image = splash.portrait960;
+		if (!image) image = splash.portrait1024;
+		if (!image) image = splash.portrait1136;
+		if (!image) image = splash.portrait2048;
+	}
 	var rateme = { label: title, callback: function () { GLOBAL.setLocation(NATIVE.market.url); } };
 	var nothanks = { label: "No thanks", callback: function () {} };
 	var remindme = { label: "Remind me later", callback: function () {} };
