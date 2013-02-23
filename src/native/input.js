@@ -22,7 +22,6 @@ NATIVE.input = {
 };
 
 if (NATIVE.events.setResponder) {
-	logger.log('on ios, setting responder');
 	NATIVE.events.setResponder(inputQueue);
 }	
 
