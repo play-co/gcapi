@@ -72,9 +72,9 @@ if (DEBUG) {
 		this.setConn = function (conn) {
 			this._conn = conn;
 
-			if (CONFIG.preload) {
-				var prevHide = CONFIG.preload.hide;
-				CONFIG.preload.hide = bind(this, function () {
+			if (CONFIG.splash) {
+				var prevHide = CONFIG.splash.hide;
+				CONFIG.splash.hide = bind(this, function () {
 					prevHide && prevHide.apply(this, arguments);
 					if (this._conn) {
 						this._conn.onConnect(this, function () {
