@@ -81,14 +81,12 @@ if (DEBUG) {
 		var documentElement = document.documentElement;
 		var getComputedStyle = window.getComputedStyle;
 		var supportsPointerEvents = false;
-		if (element) {
-			if('pointerEvents' in element.style) {
-				element.style.pointerEvents = 'auto';
-				element.style.pointerEvents = 'x';
-				documentElement.appendChild(element);
-				supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
-				documentElement.removeChild(element);
-			}
+		if (element && ('pointerEvents' in element.style)) {
+			element.style.pointerEvents = 'auto';
+			element.style.pointerEvents = 'x';
+			documentElement.appendChild(element);
+			supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+			documentElement.removeChild(element);
 		}
 
 		if (device.simulating && document.body && document.body.appendChild && supportsPointerEvents) {
