@@ -36,6 +36,7 @@ if (DEBUG) {
 		var _now = +new Date();
 		var _t = 0;
 		function renderHighlight (pos, ctx) {
+			if (!ctx) { return; }
 			ctx.save();
 			ctx.translate(pos.x, pos.y);
 			ctx.rotate(pos.r);
@@ -68,6 +69,8 @@ if (DEBUG) {
 		};
 
 		function renderSelected (pos, ctx) {
+			if (!ctx) { return; }
+
 			ctx.save();
 			ctx.translate(pos.x, pos.y);
 			ctx.rotate(pos.r);
@@ -77,24 +80,26 @@ if (DEBUG) {
 			ctx.restore();
 		};
 
-		var element = document.createElement('x');
-		var documentElement = document.documentElement;
-		var getComputedStyle = window.getComputedStyle;
-		var supportsPointerEvents = false;
-		if (element && ('pointerEvents' in element.style)) {
-			element.style.pointerEvents = 'auto';
-			element.style.pointerEvents = 'x';
-			documentElement.appendChild(element);
-			supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
-			documentElement.removeChild(element);
-		}
+		if (!device.isMobile) {
+			var element = document.createElement('x');
+			var documentElement = document.documentElement;
+			var getComputedStyle = window.getComputedStyle;
+			var supportsPointerEvents = false;
+			if (element && ('pointerEvents' in element.style)) {
+				element.style.pointerEvents = 'auto';
+				element.style.pointerEvents = 'x';
+				documentElement.appendChild(element);
+				supportsPointerEvents = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+				documentElement.removeChild(element);
+			}
 
-		if (device.simulating && document.body && document.body.appendChild && supportsPointerEvents) {
-			var canvas = new (device.get('Canvas'))();
-			canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 1000; pointer-events: none;';
-			document.body.appendChild(canvas);
+			if (device.simulating && document.body && document.body.appendChild && supportsPointerEvents) {
+				var canvas = new (device.get('Canvas'))();
+				canvas.style.cssText = 'position: absolute; left: 0; top: 0; z-index: 1000; pointer-events: none;';
+				document.body.appendChild(canvas);
 
-			this.constructor.ctx = canvas.getContext('2d');
+				this.constructor.ctx = canvas.getContext('2d');
+			}
 		}
 
 		// used to drive renderer separately when app is paused
@@ -118,6 +123,7 @@ if (DEBUG) {
 		};
 
 		this.render = function (ctx) {
+			if (!ctx) { return; }
 			// if (!this._isEnabled) { return; }
 
 			// on simulated devices, we have our own canvas
