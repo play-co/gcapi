@@ -36,7 +36,7 @@ if (DEBUG) {
 				"title": CONFIG.title,
 				"shortName": CONFIG.shortName,
 				"userAgent": navigator.userAgent,
-				"device": NATIVE.device
+				"device": GLOBAL.NATIVE ? NATIVE.device : null
 			});
 
 			logger.log('DEBUGGING CONNECTION MADE');
