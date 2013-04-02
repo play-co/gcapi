@@ -78,29 +78,32 @@ var Audio = exports = Class(function () {
 		return true;
 	};
 
-	this.load = function () {
-		NATIVE.sound.loadSound(this._src);
+	this.load = function (thenPlay) {
+		var s = NATIVE.sound.preloadSound(this._src);
+		if (thenPlay) {
+			s.onload = bind(this, '_play');
+		}
 		this._startedLoad = true;
+	};
+
+	this._play = function() {
+		NATIVE.sound.playSound(
+			this._src,
+			this._volume,
+			(this.loop === "loop" || this.loop === true)
+		);
+		this._startTime = Date.now();
 	};
 
 	this.play = function () {
 		this.paused = false;
 		if (this.isBackgroundMusic) {
 			NATIVE.sound.playBackgroundMusic(this._src, this._volume, true);
+		} else if (!this._startedLoad) {
+			this.load(true);
 		} else {
-			if (!this._startedLoad) {
-				this.load();
-			}
-			NATIVE.sound.playSound(
-				this._src,
-				this._volume,
-				(this.loop === "loop" || this.loop === true)
-			);
-			this._startTime = Date.now();
+			this._play();
 		}
-
-
-		this._startedLoad = true;
 	};
 
 	this.pause = function () {
