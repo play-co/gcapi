@@ -35,7 +35,7 @@ exports.Reader = Class(function() {
         if (allowed_modes.indexOf(mode) == -1) {
             throw new Error("illegal read mode:", mode);
         }
-        if (mode == 'xml') {
+        if (mode == 'xml' && !this._parser) {
             try {
                 this._parser = new DOMParser();
             } catch (e) {
