@@ -47,7 +47,6 @@ exports.Reader = Class(function() {
     };
 
     this.read = function(data) {
-        logger.log('received:', data);
         this._buff += data;
         this._separate_events();
     };
