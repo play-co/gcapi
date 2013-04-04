@@ -66,10 +66,11 @@ if (DEBUG) {
 			ctx.fillRect(-7, -0.5, 14, 1);
 
 			ctx.restore();
-		}
+		};
 
-		function renderSelected(pos, ctx) {
+		function renderSelected (pos, ctx) {
 			if (!ctx) { return; }
+
 			ctx.save();
 			ctx.translate(pos.x, pos.y);
 			ctx.rotate(pos.r);
@@ -77,14 +78,14 @@ if (DEBUG) {
 			ctx.lineWidth = 1;
 			ctx.strokeRect(-0.5, -0.5, pos.width + 1, pos.height + 1);
 			ctx.restore();
-		}
+		};
 
 		if (!device.isMobile) {
 			var element = document.createElement('x');
 			var documentElement = document.documentElement;
 			var getComputedStyle = window.getComputedStyle;
 			var supportsPointerEvents = false;
-			if('pointerEvents' in element.style) {
+			if (element && ('pointerEvents' in element.style)) {
 				element.style.pointerEvents = 'auto';
 				element.style.pointerEvents = 'x';
 				documentElement.appendChild(element);
@@ -105,21 +106,21 @@ if (DEBUG) {
 		this.startTick = function () {
 			this.stopTick();
 			this._tick = setInterval(bind(this, 'render'), 1000 / 30);
-		}
+		};
 
 		// used to stop renderer's timer when app is unpaused
 		this.stopTick = function () {
 			if (this._tick) {
 				clearInterval(this._tick);
 			}
-		}
+		};
 
 		this.setEnabled = function (isEnabled) {
 			this._isEnabled = isEnabled;
 			if (OverlayRenderer.ctx) {
 				OverlayRenderer.ctx.clear();
 			}
-		}
+		};
 
 		this.render = function (ctx) {
 			if (!ctx) { return; }
@@ -146,7 +147,7 @@ if (DEBUG) {
 				var pos = view && view.getPosition();
 				if (pos) renderSelected(pos, ctx);
 			}
-		}
+		};
 	});
 }
 
