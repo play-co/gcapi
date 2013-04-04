@@ -42,7 +42,7 @@ NATIVE.events.registerHandler('socketClosed', function(evt) {
 NATIVE.events.registerHandler('socketError', function(evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
-		socket.onError();
+		socket.onError(evt.message);
 	}
 });
 
