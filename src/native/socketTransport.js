@@ -16,6 +16,7 @@
  */
 
 jsio('import net.interfaces')
+jsio('import .reader')
 
 function onError(opts) {
 	logger.log('SOCKET ERROR: ', JSON.stringify(opts));
@@ -48,7 +49,7 @@ NATIVE.events.registerHandler('socketError', function(evt) {
 NATIVE.events.registerHandler('socketRead', function(evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
-		socket.onRead(evt.data);
+		socket.reader.read(evt.data);
 	}
 });
 
@@ -84,6 +85,7 @@ exports.Transport = Class(net.interfaces.Transport, function() {
 
 exports.Socket = function(host, port) {
 	var socket = new NATIVE.Socket(host, port);
+	socket.reader = new reader.Reader(bind(socket, 'onRead'));
 	sockets[socket.__id] = socket;
 	return socket;
 }
