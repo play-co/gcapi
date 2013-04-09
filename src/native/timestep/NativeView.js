@@ -17,6 +17,8 @@
 
 // monkey patch the View prototype (object composition)
 
+from ui.filter import Filter;
+
 exports.install = function() {
 	import ui.View as View;
 
@@ -24,11 +26,20 @@ exports.install = function() {
 
 	// TODO this is only going to work with 1 filter
 	proto.addFilter = function(filter) {
+		this._filters[filter.getType()] = filter;
 		filter.setView(this);
 		filter.update();
-	}
+	};
+
+	proto.removeFilter = function(type) {
+		if (this.__view.filterType == Filter.TYPES[type]) {
+			this.clearFilters();
+		}
+		delete this._filters[type];
+	};
 
 	proto.clearFilters = function() {
+		this.__view.filterType = 'None';
 		this.__view.filterColor = 'rgba(0,0,0,0)';
-	}
+	};
 };
