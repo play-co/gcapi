@@ -39,7 +39,7 @@ exports.install = function() {
 	};
 
 	proto.clearFilters = function() {
-		this.__view.filterType = 'None';
+		this.__view.filterType = 0;
 		this.__view.filterColor = 'rgba(0,0,0,0)';
 	};
 };
