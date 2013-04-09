@@ -16,7 +16,7 @@
  */
 
 var json_chars = {'[':']','{':'}','"':'"'};
-var allowed_modes = ['stream', 'json', 'xml', 'delimiter'];
+var allowed_modes = ['stream', 'json', 'delimiter'];
 exports.Reader = Class(function() {
     this.init = function(cb, rmode, delim) {
         this._buff = "";
@@ -34,13 +34,6 @@ exports.Reader = Class(function() {
     this.setMode = function(mode, delim) {
         if (allowed_modes.indexOf(mode) == -1) {
             throw new Error("illegal read mode:", mode);
-        }
-        if (mode == 'xml' && !this._parser) {
-            try {
-                this._parser = new DOMParser();
-            } catch (e) {
-                throw new Error("xml mode is currently only supported in the browser");
-            }
         }
         this._mode = mode;
         this._delim = mode == 'delimiter' ? delim : null;
@@ -70,45 +63,6 @@ exports.Reader = Class(function() {
                         break;
                     }
                 }
-                break;
-            case 'xml':
-                if (!this._name) {
-                    while (this._buff && this._buff.charAt(0) != "<") {
-                        this._checked = 0;
-                        this._buff = this._buff.slice(1);
-                    }
-                    var close_index = this._buff.indexOf(">");
-                    if (close_index == -1) {
-                        break;
-                    }
-                    if (this._buff.charAt(close_index - 1) == "/") {
-                        frame = this._parser.parseFromString(this._buff.slice(0, close_index + 1), "text/xml").firstChild;
-                        this._buff = this._buff.slice(close_index + 1);
-                        this._checked = 0;
-                        this._name = null;
-                        break;
-                    }
-                    this._name = this._buff.slice(1, close_index);
-                    var s = this._name.indexOf(" ");
-                    if (s != -1) {
-                        this._name = this._name.slice(0, s);
-                    }
-                    this._checked = close_index + 1;
-                }
-                var i = this._buff.indexOf(">", this._checked);
-                while (i != -1) {
-                    if (this._buff.slice(i-2-this._name.length,i+1) == "</"+this._name+">") {
-                        frame = this._parser.parseFromString(this._buff.slice(0, i + 1), "text/xml").firstChild;
-                        this._buff = this._buff.slice(i + 1);
-                        this._checked = 0;
-                        this._name = null;
-                        break;
-                    }
-                    else {
-                        this._checked = i + 1;
-                        i = this._buff.indexOf(">", this._checked);
-                    }
-                }                
                 break;
             case 'delimiter':
                 var sep = this._buff.indexOf(this._delim);
