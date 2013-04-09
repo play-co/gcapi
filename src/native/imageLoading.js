@@ -56,6 +56,8 @@ NATIVE.events.registerHandler('imageLoaded', function(evt) {
 		logURL = '<base64>';
 	}
 
+	logger.debug('imageLoaded:', logURL, evt.originalWidth + 'x' + evt.originalHeight, '(' + evt.width + 'x' + evt.height + ')');
+
 	var images = loadingImages[evt.url];
 	delete loadingImages[evt.url];
 
