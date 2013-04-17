@@ -182,7 +182,7 @@ exports = Class(lib.PubSub, function() {
 
 		Application.prototype.__root = true;
 		this.app = new Application();
-		this.buildEngine({view: this.app});
+		this.buildEngine(merge({view: this.app}, this.app._settings));
 		return this.app;
 	}
 
