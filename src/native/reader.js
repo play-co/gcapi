@@ -45,7 +45,7 @@ exports.Reader = Class(function() {
     };
 
     this._escaped = function(i) {
-        if (this._buff.charAt(i - 1) != '\\') {
+        if (i == 0 || this._buff.charAt(i - 1) != '\\') {
             return false;
         }
         return ! this._escaped(i - 1);
@@ -56,7 +56,8 @@ exports.Reader = Class(function() {
         switch (this._mode) {
             case 'json':
                 while (this._buff.length > this._checked) {
-                    var last_unclosed = this._unclosed[this._unclosed.length-1];
+                    var last_unclosed = this._unclosed.length ?
+                        this._unclosed[this._unclosed.length-1] : null;
                     var next_char = this._buff.charAt(this._checked);
                     if (this._unclosed.length > 0 && next_char == last_unclosed) {
                         if (! (next_char == '"' && this._escaped(this._checked)) ) {
