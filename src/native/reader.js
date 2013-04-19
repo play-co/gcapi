@@ -57,14 +57,14 @@ exports.Reader = Class(function() {
             case 'json':
                 while (this._buff.length > this._checked) {
                     var last_unclosed = this._unclosed[this._unclosed.length-1];
-                    var nextChar = this._buff.charAt(this._checked);
-                    if (this._unclosed.length > 0 && nextChar == last_unclosed) {
-                        if (! (nextChar == '"' && this._escaped(this._checked)) ) {
+                    var next_char = this._buff.charAt(this._checked);
+                    if (this._unclosed.length > 0 && next_char == last_unclosed) {
+                        if (! (next_char == '"' && this._escaped(this._checked)) ) {
                             this._unclosed.pop();
                         }
                     }
-                    else if (nextChar in json_chars && last_unclosed != '"') {
-                        this._unclosed.push(json_chars[nextChar]);
+                    else if (next_char in json_chars && last_unclosed != '"') {
+                        this._unclosed.push(json_chars[next_char]);
                     }
                     this._checked += 1;
                     if (this._buff && this._unclosed.length == 0) {
