@@ -44,16 +44,27 @@ exports.Reader = Class(function() {
         this._separate_events();
     };
 
+    this._escaped = function(i) {
+        if (this._buff.charAt(i - 1) != '\\') {
+            return false;
+        }
+        return ! this._escaped(i - 1);
+    };
+
     this._separate_events = function() {
         var frame;
         switch (this._mode) {
             case 'json':
                 while (this._buff.length > this._checked) {
-                    if (this._unclosed.length > 0 && this._buff.charAt(this._checked) == this._unclosed[this._unclosed.length-1]) {
-                        this._unclosed.pop();
+                    var last_unclosed = this._unclosed[this._unclosed.length-1];
+                    var nextChar = this._buff.charAt(this._checked);
+                    if (this._unclosed.length > 0 && nextChar == last_unclosed) {
+                        if (! (nextChar == '"' && this._escaped(this._checked)) ) {
+                            this._unclosed.pop();
+                        }
                     }
-                    else if (this._buff.charAt(this._checked) in json_chars) {
-                        this._unclosed.push(json_chars[this._buff.charAt(this._checked)]);
+                    else if (nextChar in json_chars && last_unclosed != '"') {
+                        this._unclosed.push(json_chars[nextChar]);
                     }
                     this._checked += 1;
                     if (this._buff && this._unclosed.length == 0) {
