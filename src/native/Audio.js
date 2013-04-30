@@ -67,11 +67,12 @@ var Audio = exports = Class(function () {
 
 	this.__defineGetter__("currentTime", function() {
 		this._updateElapsed();
-		return (this._et / 1000) | 0;
+		return this._et / 1000;
 	});
 
-	this.__defineSetter__("currentTime", function() {
-		logger.log('setting current time not supported');
+	this.__defineSetter__("currentTime", function(t) {
+		logger.log('MAR Audio setting current time to:', t);
+		NATIVE.sound.seekTo(this._src, t);
 	});
 
 	this.canPlayType = function (type) {
@@ -98,6 +99,7 @@ var Audio = exports = Class(function () {
 	this.play = function () {
 		this.paused = false;
 		if (this.isBackgroundMusic) {
+			this._startTime = Date.now();
 			NATIVE.sound.playBackgroundMusic(this._src, this._volume, true);
 		} else if (!this._startedLoad) {
 			this.load(true);
