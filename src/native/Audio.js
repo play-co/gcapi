@@ -71,7 +71,6 @@ var Audio = exports = Class(function () {
 	});
 
 	this.__defineSetter__("currentTime", function(t) {
-		logger.log('MAR Audio setting current time to:', t);
 		NATIVE.sound.seekTo(this._src, t);
 	});
 
