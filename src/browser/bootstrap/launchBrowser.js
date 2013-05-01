@@ -1,4 +1,4 @@
-/* @license
+/** @license
  * This file is part of the Game Closure SDK.
  *
  * The Game Closure SDK is free software: you can redistribute it and/or modify
@@ -32,7 +32,6 @@ var callDelegate = function(f) { if (delegate[f]) { return delegate[f].apply(del
 var controller = CONFIG.splash || {};
 var d = document;
 var el = d.body.appendChild(d.createElement('canvas'));
-
 // some android phones mock out html5 objects, but don't implement them
 var ctx = el.getContext && el.getContext('2d');
 
@@ -99,7 +98,6 @@ var onHide = new lib.Callback();
 
 // This is called automatically when the app is ready unless autoHide === false
 controller.hide = function (cb) {
-
 	onHide.run(cb);
 
 	if (!callDelegate('onBeforeHide')) {
@@ -125,42 +123,46 @@ controller.onAppLoadError = function (error) {
 	callDelegate('onAppLoadError', error);
 };
 
-if (jsio.__jsio.__srcCache['./src/LoadingDelegate.js']) {
-	import src.LoadingDelegate as LoadingDelegate;
-	delegate = new LoadingDelegate();
-} else {
-	delegate = {
-		init: function () {
-			var img = null;
-			jsio("import device");
-			// If landscape mode,
-			if (device && device.width > device.height) {
-				img = controller.landscape768;
-				if (!img) img = controller.landscape1536;
-			} else {
-				img = controller.portrait480;
-				if (!img) img = controller.portrait960;
-				if (!img) img = controller.portrait1024;
-				if (!img) img = controller.portrait1136;
-				if (!img) img = controller.portrait2048;
-			}
-			if (img) {
-				jsio("import .ImageView");
-				new loader.ImageView({
-					image: img,
-					scaleMethod: controller.scaleMethod
-				});
-			}
+delegate = {
+	onLoad: function () {
+		console.log('Init');
 
-			controller.show();
+		var img = null;
+		jsio("import device");
+		// If landscape mode,
+		if (device && device.width > device.height) {
+			img = controller.landscape768;
+			if (!img) img = controller.landscape1536;
+		} else {
+			img = controller.portrait480;
+			if (!img) img = controller.portrait960;
+			if (!img) img = controller.portrait1024;
+			if (!img) img = controller.portrait1136;
+			if (!img) img = controller.portrait2048;
 		}
+
+		window.CACHE = IMG_CACHE; // Hack!
+
+		// if (img) {
+		// 	jsio("import .ImageView");
+		// 	new loader.ImageView({
+		// 		image: img,
+		// 		scaleMethod: controller.scaleMethod
+		// 	});
+		// }
+
+		controller.show();
+	},
+	onShow: function () {
+		var GC = jsio("import gc.API as GC");
+		GLOBAL.GC.buildApp('launchUI');
 	}
 }
 
+window._continueLoad();
 callDelegate('onLoad', controller);
 
 onResize();
-
-setTimeout(function () {
-	window._continueLoad();
-}, 100);
+// setTimeout(function () {
+// 	window._continueLoad();
+// }, 100);

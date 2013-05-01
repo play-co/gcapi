@@ -1,4 +1,4 @@
-/* @license
+/** @license
  * This file is part of the Game Closure SDK.
  *
  * The Game Closure SDK is free software: you can redistribute it and/or modify
@@ -222,7 +222,7 @@ exports = Class(lib.PubSub, function() {
 				for (var i = 0, group; group = preload[i]; ++i) {
 					GC.resources.preload(group, cb.chain());
 				}
-				
+
 				// note that hidePreloader takes a null cb argument to avoid
 				// forwarding the preloader result as the callback
 				if (autoHide) { cb.run(GC, 'hidePreloader', null); }
