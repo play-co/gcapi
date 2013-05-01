@@ -24,22 +24,19 @@ exports.install = function() {
 
 	var proto = View.prototype;
 
-	// TODO this is only going to work with 1 filter
-	proto.addFilter = function(filter) {
-		this._filters[filter.getType()] = filter;
+	proto.setFilter = function(filter) {
+		this.removeFilter();
+		this._filter = filter;
 		filter.setView(this);
 		filter.update();
 	};
 
-	proto.removeFilter = function(type) {
-		if (this.__view.filterType == Filter.TYPES[type]) {
-			this.clearFilters();
+	proto.removeFilter = function() {
+		if (this._filter) {
+			this._filter.removeView(this);
+			this._filter = null;
+			this.__view.filterType = 0;
+			this.__view.filterColor = 'rgba(0,0,0,0)';
 		}
-		delete this._filters[type];
-	};
-
-	proto.clearFilters = function() {
-		this.__view.filterType = 0;
-		this.__view.filterColor = 'rgba(0,0,0,0)';
 	};
 };
