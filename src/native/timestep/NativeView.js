@@ -24,7 +24,7 @@ exports.install = function() {
 
 	var proto = View.prototype;
 
-	proto.addFilter = function(filter) {
+	proto.setFilter = function(filter) {
 		this.removeFilter();
 		this._filter = filter;
 		filter.setView(this);
