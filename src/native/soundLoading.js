@@ -35,9 +35,9 @@ NATIVE.events.registerHandler('soundError', function(evt) {
 });
 
 NATIVE.events.registerHandler('soundDuration', function(evt) {
-	logger.log('sound with url', evt.url, 'is', evt.duration, 'ms long');
+	logger.log('sound with url', evt.url, 'is', evt.duration, 'seconds long');
 	if (evt.url in songs) {
-		songs[evt.url].duration = evt.duration / 1000;
+		songs[evt.url].duration = evt.duration;
 	}
 });
 
