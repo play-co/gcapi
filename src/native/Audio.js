@@ -35,6 +35,7 @@ var Audio = exports = Class(function () {
 		if (this._startTime > 0) {
 			var now = Date.now();
 			this._et += (now - this._startTime);
+			this._startTime = now;
 		}
 	};
 
