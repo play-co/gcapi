@@ -98,6 +98,7 @@ var Audio = exports = Class(function () {
 	this.play = function () {
 		this.paused = false;
 		if (this.isBackgroundMusic) {
+			this._startedLoad = true;
 			this._startTime = Date.now();
 			NATIVE.sound.playBackgroundMusic(this._src, this._volume, true);
 		} else if (!this._startedLoad) {
