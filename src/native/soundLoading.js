@@ -34,6 +34,13 @@ NATIVE.events.registerHandler('soundError', function(evt) {
 	}
 });
 
+NATIVE.events.registerHandler('soundDuration', function(evt) {
+	logger.log('sound with url', evt.url, 'is', evt.duration, 'ms long');
+	if (evt.url in songs) {
+		songs[evt.url].duration = evt.duration;
+	}
+});
+
 var sounds = {};
 var Sound = Class(function(supr) {
 	this.init = function(opts) {
@@ -50,4 +57,9 @@ NATIVE.sound.preloadSound = function(url) {
 		complete: false,
 	});
 	return sounds[url];
+}
+
+var songs = {};
+NATIVE.sound.registerMusic = function(url, sound) {
+	songs[url] = sound;
 }

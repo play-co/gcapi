@@ -114,6 +114,7 @@ var Audio = exports = Class(function () {
 		if (this._startedLoad) {
 			NATIVE.sound.pauseSound(this._src);
 			this._updateElapsed();
+			this._startTime = 0;
 		}
 	};
 
@@ -121,8 +122,13 @@ var Audio = exports = Class(function () {
 		if (this._startedLoad) {
 			NATIVE.sound.stopSound(this._src);
 		}
-		
+
+		this.reset();
+	};
+
+	this.reset = function() {
 		this._et = 0;
+		this._startTime = 0;
 	};
 
 	this.destroy = function() {
