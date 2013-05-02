@@ -100,7 +100,7 @@ var Audio = exports = Class(function () {
 		if (this.isBackgroundMusic) {
 			this._startedLoad = true;
 			this._startTime = Date.now();
-			NATIVE.sound.playBackgroundMusic(this._src, this._volume, true);
+			NATIVE.sound.playBackgroundMusic(this._src, this._volume, this.loop);
 		} else if (!this._startedLoad) {
 			this.load(true);
 		} else {
