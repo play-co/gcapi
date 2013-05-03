@@ -72,6 +72,8 @@ var Audio = exports = Class(function () {
 	});
 
 	this.__defineSetter__("currentTime", function(t) {
+		this._et = t * 1000;
+		this._startTime = Date.now();
 		NATIVE.sound.seekTo(this._src, t);
 	});
 
