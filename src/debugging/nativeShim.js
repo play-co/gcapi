@@ -117,6 +117,9 @@ exports.sound = {
 	},
 	playBackgroundMusic: function(url) {
 		logger.log('this would play background music on native');
+	},
+	registerMusic: function(url) {
+		logger.log('this would register background music on native');
 	}
 };
 
