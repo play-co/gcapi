@@ -15,28 +15,15 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// monkey patch the View prototype (object composition)
+/**
+ * Does nothing by default.
+ */
+NATIVE.onRotation = function() {};
 
-from ui.filter import Filter;
 
-exports.install = function() {
-	import ui.View as View;
-
-	var proto = View.prototype;
-
-	proto.setFilter = function(filter) {
-		this.removeFilter();
-		this._filter = filter;
-		filter.setView(this);
-		filter.update();
-	};
-
-	proto.removeFilter = function() {
-		if (this._filter) {
-			this._filter.removeView(this);
-			this._filter = null;
-			this.__view.filterType = 0;
-			this.__view.filterColor = 'rgba(0,0,0,0)';
-		}
-	};
-};
+/**
+ * Register rotation event. Calls NATIVE.onRotation.
+ */
+NATIVE.events.registerHandler('rotate', function(evt) {
+	NATIVE.onRotation(evt);
+});

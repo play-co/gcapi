@@ -47,3 +47,4 @@ jsio('import .soundLoading');
 jsio('import .backButton');
 jsio('import .online');
 jsio('import .inputPrompt');
+jsio('import .rotation');

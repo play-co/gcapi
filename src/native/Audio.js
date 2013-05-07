@@ -35,6 +35,7 @@ var Audio = exports = Class(function () {
 		if (this._startTime > 0) {
 			var now = Date.now();
 			this._et += (now - this._startTime);
+			this._startTime = now;
 		}
 	};
 
@@ -67,11 +68,13 @@ var Audio = exports = Class(function () {
 
 	this.__defineGetter__("currentTime", function() {
 		this._updateElapsed();
-		return (this._et / 1000) | 0;
+		return this._et / 1000;
 	});
 
-	this.__defineSetter__("currentTime", function() {
-		logger.log('setting current time not supported');
+	this.__defineSetter__("currentTime", function(t) {
+		this._et = t * 1000;
+		this._startTime = Date.now();
+		NATIVE.sound.seekTo(this._src, t);
 	});
 
 	this.canPlayType = function (type) {
@@ -98,7 +101,9 @@ var Audio = exports = Class(function () {
 	this.play = function () {
 		this.paused = false;
 		if (this.isBackgroundMusic) {
-			NATIVE.sound.playBackgroundMusic(this._src, this._volume, true);
+			this._startedLoad = true;
+			this._startTime = Date.now();
+			NATIVE.sound.playBackgroundMusic(this._src, this._volume, this.loop);
 		} else if (!this._startedLoad) {
 			this.load(true);
 		} else {
@@ -113,6 +118,7 @@ var Audio = exports = Class(function () {
 		if (this._startedLoad) {
 			NATIVE.sound.pauseSound(this._src);
 			this._updateElapsed();
+			this._startTime = 0;
 		}
 	};
 
@@ -120,8 +126,13 @@ var Audio = exports = Class(function () {
 		if (this._startedLoad) {
 			NATIVE.sound.stopSound(this._src);
 		}
-		
+
+		this.reset();
+	};
+
+	this.reset = function() {
 		this._et = 0;
+		this._startTime = 0;
 	};
 
 	this.destroy = function() {
