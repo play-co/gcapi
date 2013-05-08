@@ -35,6 +35,13 @@ var Audio = exports = Class(function () {
 		if (this._startTime > 0) {
 			var now = Date.now();
 			this._et += (now - this._startTime);
+			var dur = this.duration;
+			if (this.loop && !isNaN(dur)) {
+				dur *= 1000;
+				if (this._et > dur) {
+					this._et %= dur;
+				}
+			}
 			this._startTime = now;
 		}
 	};
