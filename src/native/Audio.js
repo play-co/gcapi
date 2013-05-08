@@ -82,7 +82,7 @@ var Audio = exports = Class(function () {
 	});
 
 	this._isActive = function() {
-		var isActive = this._startedLoad && !this.paused;
+		var isActive = this._startedLoad && this._startTime;
 		if (isActive && this.isBackgroundMusic) {
 			var cur = this.currentTime;
 			var dur = this.duration;
