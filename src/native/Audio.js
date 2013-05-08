@@ -35,12 +35,9 @@ var Audio = exports = Class(function () {
 		if (this._startTime > 0) {
 			var now = Date.now();
 			this._et += (now - this._startTime);
-			var dur = this.duration;
-			if (this.loop && !isNaN(dur)) {
-				dur *= 1000;
-				if (this._et > dur) {
-					this._et %= dur;
-				}
+			var dur = this.durationMilliseconds;
+			if (this.loop && !isNaN(dur) && this._et > dur) {
+				this._et %= dur;
 			}
 			this._startTime = now;
 		}
@@ -68,7 +65,7 @@ var Audio = exports = Class(function () {
 
 	this.__defineSetter__("volume", function(volume) {
 		this._volume = volume;
-		if (this._startedLoad) {
+		if (this._isActive()) {
 			NATIVE.sound.setVolume(this._src, volume);
 		}
 	});
@@ -83,6 +80,18 @@ var Audio = exports = Class(function () {
 		this._startTime = Date.now();
 		NATIVE.sound.seekTo(this._src, t);
 	});
+
+	this._isActive = function() {
+		var isActive = this._startedLoad && !this.paused;
+		if (isActive && this.isBackgroundMusic) {
+			var cur = this.currentTime;
+			var dur = this.duration;
+			if (isNaN(dur) || (!this.loop && (cur >= dur))) {
+				isActive = false;
+			}
+		}
+		return isActive;
+	};
 
 	this.canPlayType = function (type) {
 		return true;
