@@ -199,7 +199,7 @@ Group.prototype.group = function group() {
 		return subgroup.slot.apply(subgroup, arguments);
 	};
 	
-	copyTofunction (subgroup, f);
+	copyTofunction(subgroup, f);
 	
 	return f;
 };
@@ -392,10 +392,10 @@ function ff(context) {
 		return superGroup.slot.apply(superGroup, arguments);
 	};
 	
-	setTimeout(function (){ superGroup._execNextStep(); }, 0);
+	setTimeout(function () { superGroup._execNextStep(); }, 0);
 
 	superGroup.f = f;
-	copyTofunction (superGroup, f);
+	copyTofunction(superGroup, f);
 	return f;
 }
 
@@ -411,7 +411,7 @@ ff.defer = function (context) {
 	};
 	
 	superGroup.f = f;
-	copyTofunction (superGroup, f);
+	copyTofunction(superGroup, f);
 	return f;
 }
 
