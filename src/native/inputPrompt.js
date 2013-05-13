@@ -20,14 +20,14 @@
 
 import lib.PubSub;
 
-var InputPrompt = new Class(lib.PubSub, function(supr) {});
+var InputPrompt = new Class(lib.PubSub, function (supr) {});
 NATIVE.InputPrompt = new InputPrompt();
 
-NATIVE.events.registerHandler('inputPromptSubmit', function(evt) {
+NATIVE.events.registerHandler('inputPromptSubmit', function (evt) {
 	NATIVE.InputPrompt.publish('Submit', evt);
 });
 
 
-NATIVE.events.registerHandler('inputPromptCancel', function(evt) {
+NATIVE.events.registerHandler('inputPromptCancel', function (evt) {
 	NATIVE.InputPrompt.publish('Cancel', evt);
 });

@@ -26,7 +26,7 @@ if (NATIVE.events.setResponder) {
 	NATIVE.events.setResponder(inputQueue);
 }	
 
-NATIVE.input.get = function() {
+NATIVE.input.get = function () {
 	return inputQueue.splice(0, inputQueue.length);
 }
 

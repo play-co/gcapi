@@ -23,14 +23,14 @@ if (typeof document == 'undefined') {
 if (!document.createElement) {
 	var handlers = {};
 	
-	document.createElement = function(type) {
+	document.createElement = function (type) {
 		type = type.toUpperCase(); 
 		if (type in handlers) {
 			return handlers[type]();
 		}
 	}
 	
-	document.__registerCreateElementHandler = function(type, cb) {
+	document.__registerCreateElementHandler = function (type, cb) {
 		type = type.toUpperCase();
 		handlers[type] = cb;
 	}

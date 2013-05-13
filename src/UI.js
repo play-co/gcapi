@@ -28,32 +28,32 @@ var config = window.CONFIG;
 
 logger.log("ITS ", GLOBAL.HTMLCanvasElement);
 var uiExports = {
-	GCView: function() {
+	GCView: function () {
 		import ui.View;
 		return ui.View;
 	},
-	GCImage: function() {
+	GCImage: function () {
 		import ui.resource.Image;
 		return ui.resource.Image;
 	},
-	GCImageView: function() {
+	GCImageView: function () {
 		import ui.ImageView;
 		return ui.ImageView;
 	},
 	GCCanvas: getCanvasCtor,
-	GCSprite: function() {
+	GCSprite: function () {
 		import ui.SpriteView;
 		return ui.SpriteView;
 	},
-	GCResources: function() { // deprecated
+	GCResources: function () { // deprecated
 		import ui.resource.loader;
 		return ui.resource.loader;
 	}
 };
 
-exports = Class(function() {
+exports = Class(function () {
 	var loader = null;
-	this.cssFile = function(path, cb) {
+	this.cssFile = function (path, cb) {
 		//if (!loader) { loader = jsio('import squill.cssLoad'); }
 
 		// load from cache
@@ -106,7 +106,7 @@ exports = Class(function() {
 		return Math.round(val * this._scale) / this._scale;
 	}
 
-	this.showSpinner = function() {
+	this.showSpinner = function () {
 		if (this._spinnerCounter) {
 			++this._spinnerCounter;
 			return;
@@ -131,7 +131,7 @@ exports = Class(function() {
 		}
 	}
 	
-	this.hideSpinner = function() {
+	this.hideSpinner = function () {
 		--this._spinnerCounter;
 		if (this._spinnerCounter <= 0) {
 			this._spinnerCounter = 0;
@@ -140,12 +140,12 @@ exports = Class(function() {
 		}
 	}
 	
-	// this.showDisplayNameDialog = function() {
+	// this.showDisplayNameDialog = function () {
 	// 	this.getDisplayNameDialog().show();
 	// }
 	
-	// this.showAcceptInviteDialog = function(cb) {
-	// 	GC.getConnection().withHandshake(this, function(err) {
+	// this.showAcceptInviteDialog = function (cb) {
+	// 	GC.getConnection().withHandshake(this, function (err) {
 	// 		if (err) { cb(err); return; }
 			
 	// 		// TODO: conn.getLoginDetails()
@@ -159,7 +159,7 @@ exports = Class(function() {
 			
 	// 		var dialog = this.getAcceptInviteDialog();
 	// 		dialog.setDetails(details);
-	// 		dialog.delegate = function(action) {
+	// 		dialog.delegate = function (action) {
 	// 			switch (action) {
 	// 				case 'accept':
 	// 					GC.app.launchMultiplayerGame();
@@ -177,7 +177,7 @@ exports = Class(function() {
 	// 	});
 	// }
 	
-	// this.showChat = function() {
+	// this.showChat = function () {
 	// 	if (!this._chatMenu) {
 	// 		import GCMenus.Chat;
 	// 		this._chatMenu = new GCMenus.Chat();
@@ -189,28 +189,28 @@ exports = Class(function() {
 	// 	} else {
 	// 		menuController.push(this._chatMenu, true);
 	// 		menuController.fadeIn();
-	// 		this._chatMenu.subscribeOnce('BeforeHide', this, function() {
+	// 		this._chatMenu.subscribeOnce('BeforeHide', this, function () {
 	// 			menuController.fadeOut();
 	// 		});
 	// 	}
 	// }
 	
-	// this.alert = function(msg) {
+	// this.alert = function (msg) {
 	// 	this.showDialog({title: '', message: msg});
 	// }
 	
-	// this.showError = function(opts) {
+	// this.showError = function (opts) {
 	// 	this.showDialog(merge(opts, {title: 'Error:', message: "Sorry!"}));
 	// }
 	
-	// this.showDialog = function(opts) {
+	// this.showDialog = function (opts) {
 	// 	import GCDialogs.AlertDialog;
 	// 	var dialog = new GCDialogs.AlertDialog(opts);
 	// 	dialog.show();
 	// 	return dialog;
 	// }
 	
-	// this.getAcceptInviteDialog = function() {
+	// this.getAcceptInviteDialog = function () {
 	// 	if (!this._acceptInviteDialog) {
 	// 		import GCDialogs.AcceptInviteDialog;
 	// 		this._acceptInviteDialog = new GCDialogs.AcceptInviteDialog();
@@ -219,7 +219,7 @@ exports = Class(function() {
 	// 	return this._acceptInviteDialog;
 	// }
 	
-	// this.getDisplayNameDialog = function() {
+	// this.getDisplayNameDialog = function () {
 	// 	if (!this._displayNameDialog) {
 	// 		import GCDialogs.DisplayNameDialog;
 	// 		this._displayNameDialog = new GCDialogs.DisplayNameDialog();
@@ -228,7 +228,7 @@ exports = Class(function() {
 	// 	return this._displayNameDialog;
 	// }
 	
-	// this.getParentNode = function() {
+	// this.getParentNode = function () {
 	// 	if (!this._parentNode) {
 	// 		import timestep.doc;
 	// 		this._parentNode = timestep.doc.getElement();
@@ -236,7 +236,7 @@ exports = Class(function() {
 	// 	return this._parentNode;
 	// }
 	
-	// this.showMainMenu = function(opts) {
+	// this.showMainMenu = function (opts) {
 	// 	opts = merge(opts, {
 	// 		fade: true,
 	// 		backToGame: false
@@ -249,10 +249,10 @@ exports = Class(function() {
 	// 	if (opts.fade) { controller.fadeIn(); }
 	// }
 	
-	// this.fadeOutMenus = function() { this.getMenuController().fadeOut(); }
-	// this.fadeInMenus = function() { this.getMenuController().fadeIn(); }
+	// this.fadeOutMenus = function () { this.getMenuController().fadeOut(); }
+	// this.fadeInMenus = function () { this.getMenuController().fadeIn(); }
 	
-	// this.getMenuController = function() {
+	// this.getMenuController = function () {
 	// 	if (!this._menuController) {
 	// 		import GCMenus.MainMenu;
 	// 		import squill.MenuController;
@@ -267,7 +267,7 @@ exports = Class(function() {
 	// 	return this._menuController;
 	// }
 	
-	// this.getMainMenu = function() {
+	// this.getMainMenu = function () {
 	// 	if (!this._mainMenu) {
 	// 		import GCMenus.MainMenu;
 	// 		this._mainMenu = new GCMenus.MainMenu(merge(this._mainMenuOpts, {
@@ -278,7 +278,7 @@ exports = Class(function() {
 	// 	return this._mainMenu;
 	// }
 	
-	// this.setMainMenuOpts = function(opts) {
+	// this.setMainMenuOpts = function (opts) {
 	// 	this._mainMenu = null;
 	// 	this._mainMenuOpts = merge(opts, {
 	// 		title: 'Welcome!',
@@ -293,14 +293,14 @@ exports = Class(function() {
 	// 	return this;
 	// }
 	
-	// this.getMainMenuOpts = function() { return this._mainMenuOpts; }
+	// this.getMainMenuOpts = function () { return this._mainMenuOpts; }
 	
-	// this.hideCursor = function() {
+	// this.hideCursor = function () {
 	// 	var el = GC.app.getCanvas().getElement();
 	// 	if (el) { el.style.cursor = 'none'; }
 	// }
 	
-	// this.showCursor = function(name) {
+	// this.showCursor = function (name) {
 	// 	var el = GC.app.getCanvas().getElement();
 	// 	if (el) { el.style.cursor = name || 'default'; }
 	// }
@@ -308,7 +308,7 @@ exports = Class(function() {
 
 var cache = {};
 for (var key in uiExports) {
-	var getter = bind(GLOBAL, function(key) {
+	var getter = bind(GLOBAL, function (key) {
 			return cache[key] || (cache[key] = uiExports[key]());
 		}, key);
 	
@@ -323,7 +323,7 @@ for (var key in uiExports) {
 
 function AsyncImageLoader(url, callback) {
 	var img = new ui.resource.Image({url: url});
-	img.doOnLoad(function(success) { callback(img); });
+	img.doOnLoad(function (success) { callback(img); });
 }
 
 function getCanvasCtor() {

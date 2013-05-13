@@ -26,9 +26,9 @@ var withSession = new lib.Callback();
 var withAppID = new lib.Callback();
 
 exports.state = 'initial';
-exports.onLoad = function() { _load.forward(arguments); }
-exports.onSession = function() { withSession.forward(arguments); }
-exports.load = function(cb) {
+exports.onLoad = function () { _load.forward(arguments); }
+exports.onSession = function () { withSession.forward(arguments); }
+exports.load = function (cb) {
 	switch (exports.state) {
 		case 'completed':
 		case 'loading':
@@ -52,7 +52,7 @@ exports.load = function(cb) {
 	doLoad();
 }
 
-exports.setAppID = function(appID) { 
+exports.setAppID = function (appID) { 
 	if (withAppID.fired) {
 		withAppID.reset();
 	}
@@ -60,7 +60,7 @@ exports.setAppID = function(appID) {
 }
 
 function doLoad() {
-	window.fbAsyncInit = function() {
+	window.fbAsyncInit = function () {
 		if (!window.FB) {
 			_load.fire('failed');
 		} else {
@@ -75,7 +75,7 @@ function doLoad() {
 	el.style.cssText = 'position:absolute;left:-10px;top:-10px;width:1px;height:1px;visibility:hidden';
 
 	el = document.createElement('script');
-	el.onerror = function() { _load.fire('download_error'); };
+	el.onerror = function () { _load.fire('download_error'); };
 	el.src = '//connect.facebook.net/en_US/all.js';
 	document.getElementsByTagName('head')[0].appendChild(el);
 }
@@ -88,7 +88,7 @@ function getSession(err) {
 	
 	exports.state = 'completed';
 	
-	withAppID.run(function(appID) {
+	withAppID.run(function (appID) {
 		FB.init({
 			appId  : appID,
 			status : true, // check login status
@@ -96,7 +96,7 @@ function getSession(err) {
 			xfbml  : false	// parse XFBML
 		});
 		
-		GC.user.sync(function(err, details) {
+		GC.user.sync(function (err, details) {
 			var fbAccount = details && details.accounts.facebook;
 			if (!fbAccount) {
 				GC.error('facebook', 'error', 'noAccount?');
@@ -109,7 +109,7 @@ function getSession(err) {
 				return;
 			}
 			
-			FB.getLoginStatus(function(response) {
+			FB.getLoginStatus(function (response) {
 				if (response.session) {
 					GC.track({
 						name: 'facebook',

@@ -30,11 +30,11 @@ exports.onBackButton = function () {};
 
 exports.dialogs = {
 	
-	showDialog: function() {
+	showDialog: function () {
 		logger.log("Showing a dialog!");
 	},
 
-	showAppRater: function() {
+	showAppRater: function () {
 		logger.log("Showing rate dialog!");
 	}
 
@@ -46,31 +46,31 @@ _withContacts.fire();
 
 exports.contacts = merge(new lib.PubSub(), {
 	
-	getContactList: function() {
+	getContactList: function () {
 		return testContactList;
 	},
 
-	withContacts: function() { _withContacts.forward(arguments); },
+	withContacts: function () { _withContacts.forward(arguments); },
 
-	sendAutomatedSMS: function(phone, msg, cb) {
+	sendAutomatedSMS: function (phone, msg, cb) {
 		logger.log('Send Automated SMS:', phone, msg);
 		cb && cb();
 	},
 
-	sendSMS: function(phone, msg, cb) {
+	sendSMS: function (phone, msg, cb) {
 		logger.log('Send SMS:', phone, msg);
 		cb && cb();
 	},
 
-	getPicture: function(id) {
+	getPicture: function (id) {
 		return null;
 	},
 	
-	getPictures: function(ids) {
+	getPictures: function (ids) {
 		return null;
 	},
 
-	getPictureBase64: function(id) {
+	getPictureBase64: function (id) {
 		return null;
 	}
 
@@ -85,11 +85,11 @@ _withPhoneNumber.fire(null);
 exports.profile = {
 	fullName: "",
 
-	getPicture: function(id) {
+	getPicture: function (id) {
 		return null;
 	},
 
-	getPictureBase64: function(id) {
+	getPictureBase64: function (id) {
 		return null;
 	},
 
@@ -98,28 +98,28 @@ exports.profile = {
 
 
 exports.sound = {
-	playSound: function(url, volume) {
+	playSound: function (url, volume) {
 		logger.log('this would play a sound on native');
 	},
-	loadSound: function(url) {
+	loadSound: function (url) {
 		logger.log('this would load a sound on native');
 	},
-	pauseSound: function(url) {
+	pauseSound: function (url) {
 		logger.log('this would pause a sound on native');
 	},
-	stopSound: function(url) {
+	stopSound: function (url) {
 		logger.log('this would stop a sound on native');
 	},
-	setVolume: function(url, volume) {
+	setVolume: function (url, volume) {
 		logger.log('this would set the volume of a sound on native');
 	},
-	loadBackgroundMusic: function(url) {
+	loadBackgroundMusic: function (url) {
 		logger.log('this would load background music on native');
 	},
-	playBackgroundMusic: function(url) {
+	playBackgroundMusic: function (url) {
 		logger.log('this would play background music on native');
 	},
-	registerMusic: function(url) {
+	registerMusic: function (url) {
 		logger.log('this would register background music on native');
 	}
 };

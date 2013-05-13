@@ -16,11 +16,11 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var getAttribute = function(name) {
+var getAttribute = function (name) {
 	return this.xml['@'+name].toXMLString();
 }
 
-var getElementsByTagName = function(tag) {
+var getElementsByTagName = function (tag) {
 	var ret = [];
 	var elements = this.xml[tag];
 	for (var i = 0; i < elements.length(); i++) {
@@ -35,7 +35,7 @@ var getElementsByTagName = function(tag) {
 };
 
 exports = {
-	parseString: function(data) {
+	parseString: function (data) {
 		data = data.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "")
 
 		var xml = new XML(data);

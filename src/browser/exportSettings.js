@@ -22,15 +22,15 @@ import std.uri as URI;
 
 var keysToIgnore = /^tr_pending|BOOKMARK_DISMISSED_COUNT/
 
-var exportSettings = function() {
+var exportSettings = function () {
 	var oldUrl = new URI(window.location);
 	var protocol = oldUrl.query('protocol');
 	var url = new URI(protocol + "://" + window.location.host + window.location.pathname);
 	alert(url);
 	var settings = {};
-	_.each(_.reject(_.keys(localStorage), function(key) {
+	_.each(_.reject(_.keys(localStorage), function (key) {
 		return key.match(keysToIgnore);
-	}), function(key) {
+	}), function (key) {
 			settings[key] = localStorage[key];
 			logger.log(key, settings[key]);
 	});

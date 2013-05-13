@@ -23,17 +23,17 @@ if (device.isIOS && GLOBAL.Proxy) {
 	var _ls = {
 		length: 0,
 		getItem: NATIVE.localStorage.getItem,
-		setItem:function(key, value) {logger.log('setting item', value, 'for key', key); NATIVE.localStorage.setItem(key, value.toString()); },
+		setItem:function (key, value) {logger.log('setting item', value, 'for key', key); NATIVE.localStorage.setItem(key, value.toString()); },
 		removeItem: NATIVE.localStorage.removeItem,
 		clear: NATIVE.localStorage.clear,
 		key: NATIVE.localStorage.key
 	};
 
 	var localStorageHandler = {
-		get: function(proxy, name) {
+		get: function (proxy, name) {
 			return _ls[name] || NATIVE.localStorage.getItem(name); 
 		},
-		set: function(proxy, name, value) {
+		set: function (proxy, name, value) {
 			if (NATIVE.localStorage.setItem(name, value.toString())) {
 				_ls.length++;
 			}
@@ -45,10 +45,10 @@ if (device.isIOS && GLOBAL.Proxy) {
 	}
 } else {*/
 	GLOBAL.localStorage = {
-		setItem: function(key, value) { NATIVE.localStorage.setItem(key.toString(), value.toString()); },
-		getItem: function(key) { return NATIVE.localStorage.getItem(key.toString() || null); },
-		removeItem: function(key) { NATIVE.localStorage.removeItem(key.toString()); },
-		clear: function() { NATIVE.localStorage.clear(); },
-		key: function() { logger.log('ERROR: localStorage.key() unimplemented'); return null }
+		setItem: function (key, value) { NATIVE.localStorage.setItem(key.toString(), value.toString()); },
+		getItem: function (key) { return NATIVE.localStorage.getItem(key.toString() || null); },
+		removeItem: function (key) { NATIVE.localStorage.removeItem(key.toString()); },
+		clear: function () { NATIVE.localStorage.clear(); },
+		key: function () { logger.log('ERROR: localStorage.key() unimplemented'); return null }
 	};
 //}

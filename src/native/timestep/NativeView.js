@@ -20,19 +20,19 @@
 
 from ui.filter import Filter;
 
-exports.install = function() {
+exports.install = function () {
 	import ui.View as View;
 
 	var proto = View.prototype;
 
-	proto.setFilter = function(filter) {
+	proto.setFilter = function (filter) {
 		this.removeFilter();
 		this._filter = filter;
 		filter.setView(this);
 		filter.update();
 	};
 
-	proto.removeFilter = function() {
+	proto.removeFilter = function () {
 		if (this._filter) {
 			this._filter.removeView(this);
 			this._filter = null;

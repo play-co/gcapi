@@ -22,15 +22,15 @@ import lib.PubSub;
 
 var _evts = new lib.PubSub();
 
-window.addEventListener = function(evtName, cb, isBubble) {
+window.addEventListener = function (evtName, cb, isBubble) {
 	_evts.subscribe(evtName, window, cb);
 }
 
-window.removeEventListener = function(evtName, cb, isBubble) {
+window.removeEventListener = function (evtName, cb, isBubble) {
 	_evts.unsubscribe(evtName, window, cb);
 }
 
-window.__fireEvent = function(name, evt) {
+window.__fireEvent = function (name, evt) {
 	if (!evt) { evt = {}; }
 	evt.type = name;
 	_evts.publish(name, evt);

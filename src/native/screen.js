@@ -18,7 +18,7 @@
 
 import device;
 
-NATIVE.screen.onResize = function(width, height) {
+NATIVE.screen.onResize = function (width, height) {
 	logger.log('native screen resize', width, height);
 	window.screen.width = width;
 	window.screen.height= height;

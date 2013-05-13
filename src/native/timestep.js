@@ -43,11 +43,11 @@ function installNativeView() {
 	var animate = device.importUI('animate');
 	animate.setViewAnimator(NATIVE.timestep.Animator);
 	merge(NATIVE.timestep.Animator.prototype, {
-		subscribe: function() {},
-		pause: function() {},
-		resume: function() {},
-		__finish: function() {},
-		_isRunning: function() {}
+		subscribe: function () {},
+		pause: function () {},
+		resume: function () {},
+		__finish: function () {},
+		_isRunning: function () {}
 	});
 	
 	// add some properties to View and ImageView to defer to native rendering

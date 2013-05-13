@@ -43,28 +43,28 @@ function merge () {
 		Array.prototype.slice.call(arguments, 1));
 }
 
-exports.pick = function() {
+exports.pick = function () {
 	var list = merge.apply(this, arguments);
 	return list[Math.random() * list.length | 0];
 }
 
-exports.gameName = function() {
+exports.gameName = function () {
 	return exports.pick(adjectives) + ' ' + exports.pick(nouns);
 }
 
-exports.username = function() {
+exports.username = function () {
 	return exports.pick(adjectives) + ' ' + exports.pick(creatures);
 }
 
-exports.name = function() {
+exports.name = function () {
 	return exports.pick(nouns, creatures);
 }
 
-exports.tautogram = function() {
+exports.tautogram = function () {
 	while (true) {
 		var name = exports.name();
 		var letter = name.charAt(0);
-		var a = merge(adjectives, colors).filter(function(a) { return a.charAt(0) == letter; });
+		var a = merge(adjectives, colors).filter(function (a) { return a.charAt(0) == letter; });
 		if (a.length) {
 			return exports.pick(a) + ' ' + name;
 		}

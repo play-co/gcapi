@@ -19,10 +19,10 @@
 "use import";
 
 var GLOBAL = window;
-exports.install = function() {
+exports.install = function () {
 	var NATIVE = GLOBAL.NATIVE = {};
 	
-	NATIVE.__defineGetter__('deviceUUID', function() {
+	NATIVE.__defineGetter__('deviceUUID', function () {
 		return _NATIVE.getDeviceID();
 	}
 }

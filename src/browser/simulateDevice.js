@@ -22,7 +22,7 @@ import lib.Enum;
 var mobile = new lib.Enum('ipad', 'iphone5', 'iphone', 'ios', 'nexus');
 var mobileBrowser = new lib.Enum('iphone-browser', 'ipad-browser', 'nexus-s-browser');
 
-exports.simulate = function(params) {
+exports.simulate = function (params) {
 	if (params.userAgent) {
 		var navigator = window.navigator;
 		var shim = window.navigator = {};
