@@ -39,7 +39,7 @@ if (GLOBAL.CONFIG.isMuted) {
 	GLOBAL.ACCESSIBILITY.mute(true);
 }
 
-exports = Class(lib.PubSub, function() {
+exports = Class(lib.PubSub, function () {
 
 	var ua = navigator.userAgent;
 	this.isNative = /TeaLeaf/.test(ua);
@@ -91,14 +91,14 @@ exports = Class(lib.PubSub, function() {
 
 		this.isOnline = navigator.onLine;
 
-		window.addEventListener('online', bind(this, function() {
+		window.addEventListener('online', bind(this, function () {
 			if (!this.isOnline) {
 				this.isOnline = true;
 				this.publish('OnlineStateChanged', true);
 			}
 		}), false);
 
-		window.addEventListener('offline', bind(this, function() {
+		window.addEventListener('offline', bind(this, function () {
 			if (this.isOnline) {
 				this.isOnline = false;
 				this.publish('OnlineStateChanged', false);
@@ -158,7 +158,7 @@ exports = Class(lib.PubSub, function() {
 
 	if (GC.env == 'browser') { setTimeout(bind(this, '_onShow'), 0); }
 
-	this._onHide = function() {
+	this._onHide = function () {
 		// signal to the app that the window is going away
 		this.app && this.app.onPause && this.app.onPause();
 
@@ -170,14 +170,14 @@ exports = Class(lib.PubSub, function() {
 		}
 	};
 
-	this._onShow = function() {
+	this._onShow = function () {
 		this.app && this.app.onResume && this.app.onResume();
 
 		this.publish('Show');
 		this.publish('AfterShow');
 	}
 
-	this.buildApp = function(entry) {
+	this.buildApp = function (entry) {
 		jsio("import src.Application as Application");
 
 		Application.prototype.__root = true;
@@ -237,7 +237,7 @@ exports = Class(lib.PubSub, function() {
 		}
 	};
 
-	this._onAppLoadError = function(error) {
+	this._onAppLoadError = function (error) {
 		logger.error('encountered error when creating src Application: ', JSON.stringify(error));
 		var splash = CONFIG.splash;
 		if (splash && splash.onAppLoadError) {
@@ -245,7 +245,7 @@ exports = Class(lib.PubSub, function() {
 		}
 	};
 
-	this.hidePreloader = function(cb) {
+	this.hidePreloader = function (cb) {
 		var splash = CONFIG.splash;
 		if (splash && splash.hide && !splash.hidden) {
 			splash.hide(cb);

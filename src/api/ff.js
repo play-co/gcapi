@@ -39,8 +39,8 @@ var slice = Array.prototype.slice;
 
 function copyToFunction (group, f) {
 	for (var method in group) {
-		f[method] = (function(method) {
-			return function() {
+		f[method] = (function (method) {
+			return function () {
 				return group[method].apply(group, arguments);
 			};
 		})(method);
@@ -199,7 +199,7 @@ Group.prototype.group = function group() {
 		return subgroup.slot.apply(subgroup, arguments);
 	};
 	
-	copyToFunction(subgroup, f);
+	copyTofunction (subgroup, f);
 	
 	return f;
 };
@@ -273,7 +273,7 @@ SuperGroup.prototype.cb = function (cb) {
  * arguments.
  */
 SuperGroup.prototype.success = function (cb) {
-	return this.cb(function(err) {
+	return this.cb(function (err) {
 		!err && cb.apply(this, slice.call(arguments, 1));
 	});
 }
@@ -283,7 +283,7 @@ SuperGroup.prototype.success = function (cb) {
  * error as an argument.
  */
 SuperGroup.prototype.error = SuperGroup.prototype.failure = function (cb) {
-	return this.cb(function(err) {
+	return this.cb(function (err) {
 		err && cb.apply(this, arguments);
 	}); 
 }
@@ -312,7 +312,7 @@ SuperGroup.prototype.timeout = function (milliseconds) {
 
 
 // Stepper function
-SuperGroup.prototype._execNextStep = function(err) {
+SuperGroup.prototype._execNextStep = function (err) {
 	if (this.result) {
 		return;
 	}
@@ -392,10 +392,10 @@ function ff(context) {
 		return superGroup.slot.apply(superGroup, arguments);
 	};
 	
-	setTimeout(function(){ superGroup._execNextStep(); }, 0);
+	setTimeout(function (){ superGroup._execNextStep(); }, 0);
 
 	superGroup.f = f;
-	copyToFunction(superGroup, f);
+	copyTofunction (superGroup, f);
 	return f;
 }
 
@@ -411,13 +411,13 @@ ff.defer = function (context) {
 	};
 	
 	superGroup.f = f;
-	copyToFunction(superGroup, f);
+	copyTofunction (superGroup, f);
 	return f;
 }
 
 //****************************************************************
 
-ff.onerror = function(err) {
+ff.onerror = function (err) {
 	err.rethrow = true;
 	throw err;
 }

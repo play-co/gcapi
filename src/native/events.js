@@ -18,11 +18,11 @@
 handlers = {};
 
 NATIVE.events = {};
-NATIVE.events.registerHandler = function(name, handler) {
+NATIVE.events.registerHandler = function (name, handler) {
 	handlers[name] = handler;
 }
 
-NATIVE.events.dispatchEvent = function(evt) {
+NATIVE.events.dispatchEvent = function (evt) {
 	var e = evt;
 	if (typeof e == 'string') {
 		e = JSON.parse(e);

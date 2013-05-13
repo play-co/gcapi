@@ -15,7 +15,7 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-exports.install = function(TeaLeaf, hostname) {
+exports.install = function (TeaLeaf, hostname) {
     logger.log('installing native support');
 
 	import device;
@@ -46,7 +46,7 @@ exports.install = function(TeaLeaf, hostname) {
 	// publisher for the overlay UIWebView
 	NATIVE.overlay.delegate = new lib.PubSub();
 	CONFIG.splash = CONFIG.splash || {};
-	var oldHide = CONFIG.splash.hide || function(){};
+	var oldHide = CONFIG.splash.hide || function (){};
 	CONFIG.splash.hide = function (cb) {
 		if (NATIVE.doneLoading instanceof Function) {
 			NATIVE.doneLoading();

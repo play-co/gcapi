@@ -18,12 +18,12 @@
 /**
  * Does nothing by default.
  */
-NATIVE.onRotation = function() {};
+NATIVE.onRotation = function () {};
 
 
 /**
  * Register rotation event. Calls NATIVE.onRotation.
  */
-NATIVE.events.registerHandler('rotate', function(evt) {
+NATIVE.events.registerHandler('rotate', function (evt) {
 	NATIVE.onRotation(evt);
 });

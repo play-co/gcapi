@@ -19,17 +19,17 @@
 
 import lib.PubSub;
 
-var Image = exports = Class(lib.PubSub, function(supr) {
+var Image = exports = Class(lib.PubSub, function (supr) {
 	import std.uri;
 
-	this.init = function(src, width, height, glname) {
+	this.init = function (src, width, height, glname) {
 		this._src = src || "";
 		this.width = width || undefined;
 		this.height = height || undefined;
 		this.__gl_name = glname || undefined;
 		this.complete = false;
 		this._fireReload = false;
-		this.__defineSetter__('src', function(value) {
+		this.__defineSetter__('src', function (value) {
 			if (!value) {
 				logger.error('empty src set on an image!');
 				this._onerror();
@@ -40,10 +40,10 @@ var Image = exports = Class(lib.PubSub, function(supr) {
 			NATIVE.gl.loadImage(this);
 		});
 		
-		this.__defineGetter__('src', function() { return this._src; });
+		this.__defineGetter__('src', function () { return this._src; });
 	}
 
-	this._onload = function(width, height, gl_name) {
+	this._onload = function (width, height, gl_name) {
 		logger.log('onload called with', width, height, gl_name);
 		this.complete = true;
 		this.width = this.originalWidth = width;
@@ -75,13 +75,13 @@ var Image = exports = Class(lib.PubSub, function(supr) {
 		}
 	}
 
-	this.addEventListener = function(type, callback, useCapture) { this.subscribe(type, this, callback); }
-	this.removeEventListener = function(type, callback, useCapture) { this.unsubscribe(type, this, callback); }
+	this.addEventListener = function (type, callback, useCapture) { this.subscribe(type, this, callback); }
+	this.removeEventListener = function (type, callback, useCapture) { this.unsubscribe(type, this, callback); }
 
-	this.onload = this.onerror = this.onreload = function() {}
+	this.onload = this.onerror = this.onreload = function () {}
 });
 
 
-exports.install = function() {
+exports.install = function () {
 	GLOBAL.Image = Image;
 }

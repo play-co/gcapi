@@ -63,25 +63,25 @@ var Audio = exports = Class(function () {
 		return this._src;
 	});
 
-	this.__defineSetter__("volume", function(volume) {
+	this.__defineSetter__("volume", function (volume) {
 		this._volume = volume;
 		if (this._isActive()) {
 			NATIVE.sound.setVolume(this._src, volume);
 		}
 	});
 
-	this.__defineGetter__("currentTime", function() {
+	this.__defineGetter__("currentTime", function () {
 		this._updateElapsed();
 		return this._et / 1000;
 	});
 
-	this.__defineSetter__("currentTime", function(t) {
+	this.__defineSetter__("currentTime", function (t) {
 		this._et = t * 1000;
 		this._startTime = Date.now();
 		NATIVE.sound.seekTo(this._src, t);
 	});
 
-	this._isActive = function() {
+	this._isActive = function () {
 		var isActive = this._startedLoad && this._startTime;
 		if (isActive && this.isBackgroundMusic) {
 			var cur = this.currentTime;
@@ -105,7 +105,7 @@ var Audio = exports = Class(function () {
 		this._startedLoad = true;
 	};
 
-	this._play = function() {
+	this._play = function () {
 		NATIVE.sound.playSound(
 			this._src,
 			this._volume,
@@ -138,7 +138,7 @@ var Audio = exports = Class(function () {
 		}
 	};
 
-	this.stop = function() {
+	this.stop = function () {
 		if (this._startedLoad) {
 			NATIVE.sound.stopSound(this._src);
 		}
@@ -146,17 +146,17 @@ var Audio = exports = Class(function () {
 		this.reset();
 	};
 
-	this.reset = function() {
+	this.reset = function () {
 		this._et = 0;
 		this._startTime = 0;
 	};
 
-	this.destroy = function() {
+	this.destroy = function () {
 		NATIVE.sound.destroySound(this._src);
 	}
 
 });
 
-exports.install = function() {
+exports.install = function () {
 	GLOBAL.Audio = Audio;
 }

@@ -17,7 +17,7 @@
 
 if (DEBUG) {
 	// prefix filenames in the debugger
-	jsio.__env.debugPath = function(path) { return 'http://' + window.location.host + '/' + path; }
+	jsio.__env.debugPath = function (path) { return 'http://' + window.location.host + '/' + path; }
 }
 
 // shims
@@ -33,9 +33,9 @@ if (!window.console) {
 
 if (!window.localStorage) {
 	window.localStorage = {
-		getItem: function() {},
-		setItem: function() {},
-		removeItem: function() {}
+		getItem: function () {},
+		setItem: function () {},
+		removeItem: function () {}
 	}
 }
 
@@ -93,16 +93,16 @@ function startApp (conn) {
 			var originalSyntax = bind(env, env.checkSyntax);
 			var originalFetch = bind(env, env.fetch);
 
-			env.fetch = function(filename) {
+			env.fetch = function (filename) {
 				logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
 				return originalFetch.apply(this, arguments);
 			}
 			
-			env.checkSyntax = function(code, filename) {
+			env.checkSyntax = function (code, filename) {
 				var xhr = new XMLHttpRequest();
 				xhr.open('POST', '/.syntax', false);
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhr.onreadystatechange = function() {
+				xhr.onreadystatechange = function () {
 					if (xhr.readyState != 4) { return; }
 				
 					if (xhr.status == 200 && xhr.responseText) {
