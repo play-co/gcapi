@@ -16,6 +16,8 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+var lastbg;
+
 var Audio = exports = Class(function () {
 
 	this.init = function (url) {
@@ -66,7 +68,7 @@ var Audio = exports = Class(function () {
 
 	this.__defineSetter__("volume", function (volume) {
 		this._volume = volume;
-		if (this._isActive()) {
+		if (!this.isBackgroundMusic || this == lastbg) {
 			NATIVE.sound.setVolume(this._src, volume);
 		}
 	});
@@ -79,26 +81,20 @@ var Audio = exports = Class(function () {
 	this.__defineSetter__("currentTime", function (t) {
 		this._et = t * 1000;
 		this._startTime = Date.now();
-		NATIVE.sound.seekTo(this._src, t);
-	});
-
-	this._isActive = function () {
-		var isActive = this._startedLoad && this._startTime;
-		if (isActive && this.isBackgroundMusic) {
-			var cur = this.currentTime;
-			var dur = this.duration;
-			if (isNaN(dur) || (!this.loop && (cur >= dur))) {
-				isActive = false;
-			}
+		if (this == lastbg) {
+			NATIVE.sound.seekTo(this._src, t);
 		}
-		return isActive;
-	};
+	});
 
 	this.canPlayType = function (type) {
 		return true;
 	};
 
 	this.load = function (thenPlay) {
+		if (this.isBackgroundMusic) {
+			// Background music should not be preloaded like normal sounds
+			return;
+		}
 		var s = NATIVE.sound.preloadSound(this._src);
 		if (thenPlay) {
 			s.onload = bind(this, '_play');
@@ -118,6 +114,7 @@ var Audio = exports = Class(function () {
 	this.play = function () {
 		this.paused = false;
 		if (this.isBackgroundMusic) {
+			lastbg = this;
 			this._startedLoad = true;
 			this._startTime = Date.now();
 			NATIVE.sound.playBackgroundMusic(this._src, this._volume, this.loop);
@@ -133,7 +130,9 @@ var Audio = exports = Class(function () {
 		this.paused = true;
 
 		if (this._startedLoad) {
-			NATIVE.sound.pauseSound(this._src);
+			if (!this.isBackgroundMusic || this == lastbg) {
+				NATIVE.sound.pauseSound(this._src);
+			}
 			this._updateElapsed();
 			this._startTime = 0;
 		}
@@ -141,7 +140,9 @@ var Audio = exports = Class(function () {
 
 	this.stop = function () {
 		if (this._startedLoad) {
-			NATIVE.sound.stopSound(this._src);
+			if (!this.isBackgroundMusic || this == lastbg) {
+				NATIVE.sound.stopSound(this._src);
+			}
 		}
 
 		this.reset();
@@ -153,6 +154,10 @@ var Audio = exports = Class(function () {
 	};
 
 	this.destroy = function () {
+		if (this == lastbg) {
+			lastbg = undefined;
+		}
+
 		NATIVE.sound.destroySound(this._src);
 	}
 
