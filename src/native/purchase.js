@@ -15,7 +15,7 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-NATIVE.events.registerHandler('purchase', function(evt) {
+NATIVE.events.registerHandler('purchase', function (evt) {
 	var state = evt.state,
 		product = evt.product,
 		order = evt.order,

@@ -496,7 +496,7 @@ if (DEBUG) {
 			this.conn.sendEvent('INPUT_SELECT', data);
 		}
 
-		this.traceEvt = function(view, evt, pt, depth) {
+		this.traceEvt = function (view, evt, pt, depth) {
 			depth = depth || 0;
 
 			var localPt = view.style.localizePoint(new Point(pt));

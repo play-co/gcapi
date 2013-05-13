@@ -15,7 +15,7 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-NATIVE.events.registerHandler('soundLoaded', function(evt) {
+NATIVE.events.registerHandler('soundLoaded', function (evt) {
 	logger.log('sound loaded with url', evt.url);
 	var loadedSound = sounds[evt.url];
 	if (loadedSound && !loadedSound.complete) {
@@ -26,7 +26,7 @@ NATIVE.events.registerHandler('soundLoaded', function(evt) {
 });
 
 
-NATIVE.events.registerHandler('soundError', function(evt) {
+NATIVE.events.registerHandler('soundError', function (evt) {
 	logger.log('sound with url', evt.url, 'failed to load');
 	var failedSound = sounds[evt.url];
 	if (failedSound) {
@@ -34,7 +34,7 @@ NATIVE.events.registerHandler('soundError', function(evt) {
 	}
 });
 
-NATIVE.events.registerHandler('soundDuration', function(evt) {
+NATIVE.events.registerHandler('soundDuration', function (evt) {
 	logger.log('sound with url', evt.url, 'is', evt.duration, 'seconds long');
 	if (evt.url in songs) {
 		songs[evt.url].duration = evt.duration;
@@ -43,15 +43,15 @@ NATIVE.events.registerHandler('soundDuration', function(evt) {
 });
 
 var sounds = {};
-var Sound = Class(function(supr) {
-	this.init = function(opts) {
+var Sound = Class(function (supr) {
+	this.init = function (opts) {
 		this.src = opts.src || null;
 		this.complete = opts.complete || null;
 	}
 
-	this.onload = this.onerror = function() {}
+	this.onload = this.onerror = function () {}
 });
-NATIVE.sound.preloadSound = function(url) {
+NATIVE.sound.preloadSound = function (url) {
 	NATIVE.sound.loadSound(url);
 	sounds[url] = new Sound({
 		src: url,
@@ -61,6 +61,6 @@ NATIVE.sound.preloadSound = function(url) {
 }
 
 var songs = {};
-NATIVE.sound.registerMusic = function(url, sound) {
+NATIVE.sound.registerMusic = function (url, sound) {
 	songs[url] = sound;
 }

@@ -26,7 +26,7 @@ if (DEBUG) {
 	exports = Class(function () {
 
 		this.traverse = function (f) { return GC.app && this.traverseView(f, GC.app.view); }
-		this.traverseView = function(f, view) {
+		this.traverseView = function (f, view) {
 			return {
 				uid: view.uid,
 				data: f(view),

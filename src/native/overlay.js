@@ -15,7 +15,7 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-NATIVE.events.registerHandler('overlay', function(evt) {
+NATIVE.events.registerHandler('overlay', function (evt) {
 	if (NATIVE.overlay.delegate) {
 		if (NATIVE.overlay.delegate.publish instanceof Function) {
 			NATIVE.overlay.delegate.publish('message', evt.event);

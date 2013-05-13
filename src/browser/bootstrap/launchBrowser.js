@@ -26,7 +26,7 @@ var FADE_DURATION = 500;
 var TEST_INVITE = false;
 
 var delegate;
-var callDelegate = function(f) { if (delegate[f]) { return delegate[f].apply(delegate, Array.prototype.slice.call(arguments, 1)); }};
+var callDelegate = function (f) { if (delegate[f]) { return delegate[f].apply(delegate, Array.prototype.slice.call(arguments, 1)); }};
 
 // Setup
 var controller = CONFIG.splash || {};
@@ -107,7 +107,7 @@ controller.hide = function (cb) {
 
 		setTimeout(bind(this, function () {
 			el.style.opacity = 0;
-			setTimeout(bind(this, function() {
+			setTimeout(bind(this, function () {
 				window.removeEventListener('resize', onResize, false);
 				window.removeEventListener('orientationchange', onResize, false);
 				d.body.removeChild(el);

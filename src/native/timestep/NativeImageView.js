@@ -15,13 +15,13 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-exports.install = function() {
+exports.install = function () {
 	import ui.ImageView as ImageView;
 
 	var proto = ImageView.prototype;
 	var setImage = proto.setImage;
 
-	proto.setImage = function(img, opts) {
+	proto.setImage = function (img, opts) {
 		var retVal = setImage.apply(this, arguments);
 		
 		if (this._img) {

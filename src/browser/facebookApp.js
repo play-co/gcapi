@@ -23,11 +23,11 @@ import .chromeFrame;
 var withFacebook = new lib.Callback();
 var _appID;
 
-exports.withFacebook = function() {
+exports.withFacebook = function () {
 	withFacebook.forward(arguments);
 }
 
-exports.init = function(appID) {
+exports.init = function (appID) {
 	if (!chromeFrame.isChromeFrame()) {
 		logger.log('Initializing Facebook canvas app with ID:', appID);
 		_appID = appID;
@@ -43,7 +43,7 @@ exports.init = function(appID) {
 	}
 };
 
-exports._onLoad = function(appID) {
+exports._onLoad = function (appID) {
 	FB.init({
       appId  : appID,
       status : true,
@@ -117,7 +117,7 @@ exports.challengeFriend = function (opts, cb) {
 	}
 };
 
-exports.buyWeeCoins = function(opts, cb) {
+exports.buyWeeCoins = function (opts, cb) {
 	if (chromeFrame.isChromeFrame()) {
 		this.sendChromeFrameMessage("buyWeeCoins", opts, cb);
 		return;
@@ -128,7 +128,7 @@ exports.buyWeeCoins = function(opts, cb) {
 		display: 'iframe',
 		order_info: opts.price+"|"+opts.amount,
 		purchase_type: 'item'
-	}, function(response) {
+	}, function (response) {
 		if (response && response.order_id) {
 			cb(null, {success: true, details: response});
 		} else if (response && response.error_message){

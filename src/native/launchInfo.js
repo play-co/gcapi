@@ -17,7 +17,7 @@
 
 NATIVE.launch = {};
 
-NATIVE.events.registerHandler('launchType', function(evt) {
+NATIVE.events.registerHandler('launchType', function (evt) {
 	NATIVE.launch.type = evt.type;
 	NATIVE.launch.data = evt.data || null;
 });

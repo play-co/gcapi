@@ -19,7 +19,7 @@ import .renderer;
 
 exports = Class(function (supr) {
 
-	this.init = function(opts) {
+	this.init = function (opts) {
 		if (!opts) { opts = {}; }
 
 		this.x = opts.x || 0;
@@ -49,8 +49,8 @@ exports = Class(function (supr) {
 		renderer.add(this);
 	}
 
-	this.getImage = function() { return this._img; }
-	this.setImage = function(img) {
+	this.getImage = function () { return this._img; }
+	this.setImage = function (img) {
 		if (typeof img == 'string') {
 			this._img = new Image();
 			this._img.onload = bind(this, function () {
@@ -97,7 +97,7 @@ exports = Class(function (supr) {
 		}
 	}
 	
-	this.render = function(ctx) {
+	this.render = function (ctx) {
 		if (!this._img || !this._img.complete) { return; }
 		
 		ctx.save();

@@ -20,7 +20,7 @@
 import lib.Callback;
 
 
-var chromeFrameClass = Class(function() {
+var chromeFrameClass = Class(function () {
 
 	var REQUEST_ID = 0;
 
