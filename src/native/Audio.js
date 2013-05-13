@@ -81,7 +81,7 @@ var Audio = exports = Class(function () {
 	this.__defineSetter__("currentTime", function (t) {
 		this._et = t * 1000;
 		this._startTime = Date.now();
-		if (!this.isBackgroundMusic || this == lastbg) {
+		if (this == lastbg) {
 			NATIVE.sound.seekTo(this._src, t);
 		}
 	});
@@ -92,7 +92,8 @@ var Audio = exports = Class(function () {
 
 	this.load = function (thenPlay) {
 		if (this.isBackgroundMusic) {
-			lastbg = this;
+			// Background music should not be preloaded like normal sounds
+			return;
 		}
 		var s = NATIVE.sound.preloadSound(this._src);
 		if (thenPlay) {
