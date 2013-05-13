@@ -392,7 +392,7 @@ function ff(context) {
 		return superGroup.slot.apply(superGroup, arguments);
 	};
 	
-	setTimeout(function(){ superGroup._execNextStep(); }, 0);
+	setTimeout(function() { superGroup._execNextStep(); }, 0);
 
 	superGroup.f = f;
 	copyToFunction(superGroup, f);

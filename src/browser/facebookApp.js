@@ -131,7 +131,7 @@ exports.buyWeeCoins = function(opts, cb) {
 	}, function(response) {
 		if (response && response.order_id) {
 			cb(null, {success: true, details: response});
-		} else if (response && response.error_message){
+		} else if (response && response.error_message) {
 			cb({msg: response.error_message});
 		} else {
 			cb({msg: "Unknown Error"});
