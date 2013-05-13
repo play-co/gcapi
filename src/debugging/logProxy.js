@@ -52,14 +52,14 @@ if (DEBUG) {
 		var oldLog = base.log;
 
 		// don't buffer logs if we haven't connected within 10 seconds
-		var timeout = setTimeout(function() { _isEnabled = false; }, 10000);
-		conn.onConnect(function() {
+		var timeout = setTimeout(function () { _isEnabled = false; }, 10000);
+		conn.onConnect(function () {
 			clearTimeout(timeout);
 			exports.flushBuffer();
 		});
 
 		var isLocked = false;
-		base.log = function() {
+		base.log = function () {
 			if (_isEnabled && !isLocked) {
 				isLocked = true; // prevent recursive loops if sendEvent decides to log stuff
 

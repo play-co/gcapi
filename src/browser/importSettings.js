@@ -19,7 +19,7 @@
 "use import";
 import std.uri as URI;
 
-exports.importSettings = function() {
+exports.importSettings = function () {
 	var url = new URI(window.location);
 	var settings = url.query("settings");
 	if (settings) {

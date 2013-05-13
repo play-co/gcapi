@@ -16,8 +16,8 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var OverlayAPI = exports = Class(function() {
-	this.init = function(env) {
+var OverlayAPI = exports = Class(function () {
+	this.init = function (env) {
 		logger.log('env', env);
 		switch (env) {
 			case 'browser':
@@ -31,16 +31,16 @@ var OverlayAPI = exports = Class(function() {
 		}
 	}
 	
-	this.setController = function(controller) {
+	this.setController = function (controller) {
 		if (this.controller) { this.controller.onBeforeClose(); }
 		this.controller = controller;
 	}
 	
-	this.send = function(data) {
+	this.send = function (data) {
 		this.delegate.send(data);
 	}
 	
-	this.show = function() {
+	this.show = function () {
 		logger.log('showing overlay');
 
 		if (this.controller.pauseTimestep()) {
@@ -52,7 +52,7 @@ var OverlayAPI = exports = Class(function() {
 		this.delegate.show();
 	}
 
-	this.hide = function() {
+	this.hide = function () {
 		logger.log('hiding overlay');
 
 		if (this.controller.pauseTimestep()) {
@@ -64,27 +64,27 @@ var OverlayAPI = exports = Class(function() {
 		this.delegate.hide();
 	}
 	
-	this.pushMenu = function(name) {
+	this.pushMenu = function (name) {
 		this.delegate.send({type: 'ui', target: name, method: 'push'});
 	}
 	
-	this.popMenu = function() {
+	this.popMenu = function () {
 		this.delegate.send({type: 'ui', method: 'pop'});
 	}
 	
-	this.popToMenu = function(name) {
+	this.popToMenu = function (name) {
 		this.delegate.send({type: 'ui', target: name, method: 'pop'});
 	}
 
-	this.showDialog = function(name) {
+	this.showDialog = function (name) {
 		this.delegate.send({type: 'ui', target: name, method: 'show'});
 	}
 	
-	this.hideDialog = function(name) {
+	this.hideDialog = function (name) {
 		this.delegate.send({type: 'ui', target: name, method: 'hide'});
 	}
 	
-	this.load = function(name, opts) { 
+	this.load = function (name, opts) { 
 		if (!/^[a-zA-Z0-9]+$/.test(name)) {
 			logger.error('Invalid name for overlay! (only letters and numbers please)');
 			return;
@@ -97,18 +97,18 @@ var OverlayAPI = exports = Class(function() {
 	}
 });
 
-exports.prototype.BaseOverlay = Class(function() {
-	this.pauseTimestep = function() { return true; }
+exports.prototype.BaseOverlay = Class(function () {
+	this.pauseTimestep = function () { return true; }
 	
 	this.onEvent = 
 	this.onShow = 
 	this.onHide = 
 	this.onBeforeClose =
-		function() {}
+		function () {}
 });
 
-var BrowserDelegate = Class(function() {
-	this.init = function(api) {
+var BrowserDelegate = Class(function () {
+	this.init = function (api) {
 		from util.browser import $;
 		import device;
 		
@@ -116,14 +116,14 @@ var BrowserDelegate = Class(function() {
 		this._removeListener = $.onEvent(window, 'message', this, '_onMessage');
 	}
 	
-	this.destroy = function() {
+	this.destroy = function () {
 		if (this._removeListener) {
 			this._removeListener();
 			this._removeListener = null;
 		}
 	}
 	
-	this.load = function(name) {
+	this.load = function (name) {
 		import .doc;
 		import std.uri;
 		
@@ -157,7 +157,7 @@ var BrowserDelegate = Class(function() {
 		
 		if (device.isMobileBrowser) {
 			src.addHash({mobileBrowser: 1});
-			var removeListener = $.onEvent(this._el, 'load', function(evt) {
+			var removeListener = $.onEvent(this._el, 'load', function (evt) {
 				removeListener();
 				device.hideAddressBar(false);
 				setTimeout(bind(device, 'hideAddressBar', false), 0);
@@ -167,7 +167,7 @@ var BrowserDelegate = Class(function() {
 		this._el.src = src;
 	}
 	
-	this._onMessage = function(e) {
+	this._onMessage = function (e) {
 		var data = e.data;
 		if (data.substring(0, 8) == 'OVERLAY:') {
 			try {
@@ -180,30 +180,30 @@ var BrowserDelegate = Class(function() {
 		}
 	}
 	
-	this.send = function(data) {
+	this.send = function (data) {
 		var win = this._el.contentWindow;
 		win.postMessage('OVERLAY:' + JSON.stringify(data), '*');
 	}
 	
-	this.show = function() {
+	this.show = function () {
 		this.send({type: 'show'});
 		$.show(this._el);
 		device.hideAddressBar();
 	}
 	
-	this.hide = function(data) {
+	this.hide = function (data) {
 		this.send({type: 'hide'});
 		$.hide(this._el);
 		device.hideAddressBar();
 	}
 });
 
-var IOSDelegate = Class(function() {
-	this.init = function(api) {
+var IOSDelegate = Class(function () {
+	this.init = function (api) {
 		this._api = api;
 	}
 	
-	this.load = function(name) {
+	this.load = function (name) {
 		logger.log('loading', name);
 		NATIVE.overlay.load('/overlay/' + name + '.html?' + (+new Date()));
 		if (!this._subscribed) {
@@ -213,20 +213,20 @@ var IOSDelegate = Class(function() {
 		}
 	}
 	
-	this._onMessage = function(data) {
+	this._onMessage = function (data) {
 		logger.log('got a message', data);
 		this._api.controller.onEvent(data);
 	}
 	
-	this.show = function() {
+	this.show = function () {
 		NATIVE.overlay.show();
 	}
 	
-	this.hide = function() {
+	this.hide = function () {
 		NATIVE.overlay.hide();
 	}
 	
-	this.send = function(data) {
+	this.send = function (data) {
 		logger.log('doing native.overlay.send');
 		NATIVE.overlay.send(JSON.stringify(data));
 	}

@@ -36,10 +36,10 @@ NATIVE.gallery.choosePicture = function (size, id) {
 	return image;
 };
 
-NATIVE.gl.loadImage = function(image) {
+NATIVE.gl.loadImage = function (image) {
 	var texData = NATIVE.gl._loadImage(image._src);
 	if (texData) {
-		setTimeout(function() {
+		setTimeout(function () {
 			image._onload(texData.width, texData.height, texData.name);
 		}, 0);
 	} else {
@@ -50,7 +50,7 @@ NATIVE.gl.loadImage = function(image) {
 	}
 }
 
-NATIVE.events.registerHandler('imageLoaded', function(evt) {
+NATIVE.events.registerHandler('imageLoaded', function (evt) {
 
 	var logURL = evt.url;
 	if (logURL.substring(0, 11) == 'data:image/') {
@@ -63,17 +63,17 @@ NATIVE.events.registerHandler('imageLoaded', function(evt) {
 	delete loadingImages[evt.url];
 
 	if (images) { 
-		images.forEach(function(image) { 
+		images.forEach(function (image) { 
 			image._onload(evt.originalWidth, evt.originalHeight, evt.glName);
 			GLOBAL.GC && GC.app && GC.app.engine && GC.app.engine.needsRepaint();
 		});
 	}
 });
 
-NATIVE.events.registerHandler('imageError', function(evt) {
+NATIVE.events.registerHandler('imageError', function (evt) {
 	var images = loadingImages[evt.url];
 	if (images) {
-		images.forEach(function(image) {
+		images.forEach(function (image) {
 			if (image._onerror) {
 				image._onerror();
 			}

@@ -25,11 +25,11 @@ if (DEBUG) {
 		if (_isInstalled) { return; }
 		_isInstalled = true;
 
-		conn.onError = function(err) {
+		conn.onError = function (err) {
 			logger.log('log protocol error:', err);
 		}
 		
-		conn.onConnect(function() {
+		conn.onConnect(function () {
 			conn.sendEvent("HANDSHAKE", {
 				"type": jsio.__env.name,
 				"appID": CONFIG.appID,
@@ -43,11 +43,11 @@ if (DEBUG) {
 			logger.log('DEBUGGING CONNECTION MADE');
 		});
 
-		conn.onDisconnect(function() {
+		conn.onDisconnect(function () {
 			logger.log('DEBUGGING CONNECTION LOST');
 		});
 
-		conn.onRequest.subscribe('EVAL', this, function(req) {
+		conn.onRequest.subscribe('EVAL', this, function (req) {
 			try {
 				var value;
 				if (GLOBAL.NATIVE && NATIVE.eval) {

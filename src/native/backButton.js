@@ -20,7 +20,7 @@
  * Returns false by default. If you override, return true to
  * prevent default back button behavior.
  */
-NATIVE.onBackButton = function() {
+NATIVE.onBackButton = function () {
 	return false;	
 };
 
@@ -30,7 +30,7 @@ NATIVE.onBackButton = function() {
  * sends game activity to the back unless NATIVE.onBackButton
  * returns true.
  */
-NATIVE.events.registerHandler('backButton', function(evt) {
+NATIVE.events.registerHandler('backButton', function (evt) {
 	var result = NATIVE.onBackButton();
 	
 	logger.log('back button pushed');

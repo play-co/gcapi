@@ -18,7 +18,7 @@
 
 // ensure that the ViewBacking update and copy methods
 // are present on the native View prototype
-exports.install = function() {
+exports.install = function () {
 	import device;
 	import ui.backend.BaseBacking as BaseBacking;
 

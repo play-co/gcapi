@@ -16,7 +16,7 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var XMLHttpRequest = Class(function() {
+var XMLHttpRequest = Class(function () {
 	var state = {
 		"UNSENT": 0,
 		"OPENED": 1,
@@ -24,14 +24,14 @@ var XMLHttpRequest = Class(function() {
 		"LOADING": 3,
 		"DONE": 4
 	};
-	this.init = function() {
+	this.init = function () {
 		this.readyState = state.UNSENT;
 		this.responseText = null;
 		this._requestHeaders = {};
 		this.__id = id;
 	}
 
-	this.open = function(method, url, async) {
+	this.open = function (method, url, async) {
 		this._method = method;
 		this._url = '' + url;
 		this._async = async || false;
@@ -43,15 +43,15 @@ var XMLHttpRequest = Class(function() {
 		}
 	}
 
-	this.getResponseHeader = function(name) { return this._responseHeaders[name]; }
+	this.getResponseHeader = function (name) { return this._responseHeaders[name]; }
 
 	this.getAllResponseHeaders = function () { return this._responseHeaders; }
 	
-	this.setRequestHeader = function(name, value) {
+	this.setRequestHeader = function (name, value) {
 		this._requestHeaders[name] = value;
 	}
 
-	this.send = function(data) {
+	this.send = function (data) {
 		this._data = data || "";
 		xhrs[id++] = this;
 		NATIVE.xhr.send(this._method, this._url, this._async, this._data, 0, this.__id, this._requestHeaders);
@@ -63,7 +63,7 @@ var XMLHttpRequest = Class(function() {
 		NATIVE.xhr.uploadFile(this.__id, this._filename, this._url, this._async, this._requestHeaders);
 	}
 
-	this._onreadystatechange = function(state, status, response) {
+	this._onreadystatechange = function (state, status, response) {
 		this.readyState = state;
 		this.status = status;
 		this.responseText = response || null;
@@ -72,15 +72,15 @@ var XMLHttpRequest = Class(function() {
 		}
 	}
 
-	this.onreadystatechange = function() {}
+	this.onreadystatechange = function () {}
 });
 
 var xhrs = {};
 var id = 0;
 
-exports.install = function() {
+exports.install = function () {
 	GLOBAL.XMLHttpRequest = XMLHttpRequest;
-	NATIVE.events.registerHandler('xhr', function(evt) {
+	NATIVE.events.registerHandler('xhr', function (evt) {
 		var xhr = xhrs[evt.id];
 		if (xhr) {
 			var headers = {};

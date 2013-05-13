@@ -64,7 +64,7 @@ function startApp (conn) {
 	//logging.setPrefix(type);
 	
 	// prefix filenames in the debugger
-	jsio.__env.debugPath = function(path) { return '[' + type + ']:' + path; };
+	jsio.__env.debugPath = function (path) { return '[' + type + ']:' + path; };
 	
 	logger.log('init debugging', jsio.__env.getCwd());
 

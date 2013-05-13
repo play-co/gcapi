@@ -25,14 +25,14 @@ function onError(opts) {
 
 var sockets = {};
 
-NATIVE.events.registerHandler('socketOpened', function(evt) {
+NATIVE.events.registerHandler('socketOpened', function (evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
 		socket.onConnect();
 	}
 
 });
-NATIVE.events.registerHandler('socketClosed', function(evt) {
+NATIVE.events.registerHandler('socketClosed', function (evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
 		socket.onClose();
@@ -40,14 +40,14 @@ NATIVE.events.registerHandler('socketClosed', function(evt) {
 	delete sockets[evt.id];
 });
 
-NATIVE.events.registerHandler('socketError', function(evt) {
+NATIVE.events.registerHandler('socketError', function (evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
 		socket.onError(evt.message);
 	}
 });
 
-NATIVE.events.registerHandler('socketRead', function(evt) {
+NATIVE.events.registerHandler('socketRead', function (evt) {
 	var socket = sockets[evt.id];
 	if (socket) {
 		socket.reader.read(evt.data);
@@ -55,13 +55,13 @@ NATIVE.events.registerHandler('socketRead', function(evt) {
 });
 
 
-exports.Transport = Class(net.interfaces.Transport, function() {
-	this.init = function(socket) {
+exports.Transport = Class(net.interfaces.Transport, function () {
+	this.init = function (socket) {
 		this._socket = socket;
 	}
 	
-	this.makeConnection = function(protocol) {
-		this._socket.onRead  = function(data) {
+	this.makeConnection = function (protocol) {
+		this._socket.onRead  = function (data) {
 			try { 
 				protocol.dataReceived.apply(protocol, arguments); 
 			} catch (e) { 
@@ -73,26 +73,26 @@ exports.Transport = Class(net.interfaces.Transport, function() {
 		this._socket.onClose = bind(protocol, 'connectionLost');
 	}
 	
-	this.write = function(data) {
+	this.write = function (data) {
 		this._socket.send(data);
 	}
 
-	this.loseConnection = function() {
+	this.loseConnection = function () {
 		this._socket.close();
 	}
 });
 
 //TODO add timeout
 
-exports.Socket = function(host, port) {
+exports.Socket = function (host, port) {
 	var socket = new NATIVE.Socket(host, port);
 	socket.reader = new reader.Reader(bind(socket, 'onRead'));
 	sockets[socket.__id] = socket;
 	return socket;
 }
 
-exports.Connector = Class('ios.socket', net.interfaces.Connector, function() {
-	this.connect = function() {
+exports.Connector = Class('ios.socket', net.interfaces.Connector, function () {
+	this.connect = function () {
 		this._state = net.interfaces.STATE.CONNECTING;
 		
 		var host = this._opts.host,
@@ -102,13 +102,13 @@ exports.Connector = Class('ios.socket', net.interfaces.Connector, function() {
 		
 	    logger.log('connecting to', host, port, timeout);
 		socket.onConnect = bind(this, 'onSocketConnect', socket);
-		socket.onError = bind(this, function(err) {
+		socket.onError = bind(this, function (err) {
 			logger.error(err);
 			this.onDisconnect();
 		});
 	}
 	
-	this.onSocketConnect = function(socket) {
+	this.onSocketConnect = function (socket) {
 	    logger.log('connected!')
 		this.onConnect(new exports.Transport(socket));
 	}
