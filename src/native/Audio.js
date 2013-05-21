@@ -29,6 +29,7 @@ var Audio = exports = Class(function () {
 		this.loop = false;
 		this._startTime = 0;
 		this._et = 0;
+		this.readyState = 4;
 		if (url) {
 			this.src = url;
 		}
