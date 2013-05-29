@@ -22,6 +22,8 @@ import lib.PubSub;
 
 var _evts = new lib.PubSub();
 
+window.open = window.open || window.setLocation;
+
 window.addEventListener = function (evtName, cb, isBubble) {
 	_evts.subscribe(evtName, window, cb);
 }
