@@ -71,7 +71,7 @@ function analytics () {
 			'isIOS:' + (device.isIOS ? 1 : 0);
 
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'http://www.gameclosure.com?' + params, true);
+	xhr.open('GET', 'http://www.gameclosure.com/analytics?' + params, true);
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState != 4) { return; }
 	
