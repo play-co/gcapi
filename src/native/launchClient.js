@@ -54,6 +54,32 @@ if (window.DEBUG_WAIT) {
 	startApp();
 }
 
+/**
+ * Anonymous statistics, this information helps us improve the DevKit by 
+ * providing us information about which versions are out there.
+ *
+ * You can remove this or replace it with your own analytics if you like.
+ */
+function analytics () {
+	var config = GLOBAL.CONFIG;
+	var params = 'appID:' + escape(config.appID || '') + '&' +
+			'bundleID:' + escape(config.bundleID || '') + '&' +
+			'appleID:' + escape(config.appleID || '') + '&' +
+			'version:' + escape(config.version || '') + '&' +
+			'sdkVersion:' + escape(config.sdkVersion || '') + '&' +
+			'isAndroid:' + (device.isAndroid ? 1 : 0) + '&' +
+			'isIOS:' + (device.isIOS ? 1 : 0);
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'http://www.gameclosure.com?' + params, true);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState != 4) { return; }
+	
+		logger.log('=========>' + xhr.responseText);
+	};
+	xhr.send();	
+}
+
 function startApp (conn) {
 	if (conn) {
 		import ..debugging.TimestepInspector;
@@ -69,6 +95,7 @@ function startApp (conn) {
 	logger.log('init debugging', jsio.__env.getCwd());
 
 	import gc.API;
+	analytics();
 	GC.buildApp('launchUI');
 
 	if (conn) {
