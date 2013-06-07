@@ -16,38 +16,16 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-handlers = {};
+/**
+ * Does nothing by default.
+ */
+NATIVE.onRotation = function () {};
 
-NATIVE.events = {};
-NATIVE.events.registerHandler = function (name, handler) {
-	handlers[name] = handler;
-}
 
-NATIVE.events.dispatchEvent = function (evt) {
-	var e = evt;
-	if (typeof e == 'string') {
-		e = JSON.parse(e);
-	}
-
-	var handler = handlers[e.name];
-	if (handler) {
-		handler(e);
-	}
-}
-
-jsio('import .input');
-jsio('import .plugins');
-jsio('import .overlay');
-jsio('import .purchase');
-jsio('import .pauseResume');
-jsio('import .offscreenBuffer');
-jsio('import .dialog');
-jsio('import .log');
-jsio('import .imageLoading');
-jsio('import .soundLoading');
-jsio('import .backButton');
-jsio('import .online');
-jsio('import .inputPrompt');
-jsio('import .rotation');
-jsio('import .prompt');
-jsio('import .contacts');
+/**
+ * Register rotation event. Calls NATIVE.onRotation.
+ */
+NATIVE.events.registerHandler('prompt', function (evt) {
+	logger.log('prompt!', evt);
+	NATIVE.onPrompt && NATIVE.onPrompt(evt.text, evt.canceled);
+});
