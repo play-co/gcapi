@@ -72,11 +72,6 @@ function analytics () {
 
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', 'http://www.gameclosure.com/analytics?' + params, true);
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState != 4) { return; }
-	
-		logger.log('=========>' + xhr.responseText);
-	};
 	xhr.send();	
 }
 
