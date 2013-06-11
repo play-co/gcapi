@@ -154,8 +154,9 @@ delegate = {
 		controller.show();
 	},
 	onShow: function () {
-		var GC = jsio("import gc.API as GC");
-		GLOBAL.GC.buildApp('launchUI');
+		// this gets called in launchClient.js
+//		var GC = jsio("import gc.API as GC");
+//		GLOBAL.GC.buildApp('launchUI');
 	}
 }
 
