@@ -16,7 +16,10 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (DEBUG) {
+import device;
+var isSimulator = device.isSimulator;
+
+if (isSimulator) {
 	// prefix filenames in the debugger
 	jsio.__env.debugPath = function (path) { return 'http://' + window.location.host + '/' + path; }
 }
@@ -46,7 +49,7 @@ var uri = new std.uri(window.location);
 var mute = uri.hash('mute');
 CONFIG.isMuted = mute != undefined && mute != "false" && mute != "0" && mute != "no";
 
-if (DEBUG) {
+if (isSimulator) {
 	// device simulation
 
 	// simulate device chrome, input, and userAgent
@@ -83,7 +86,7 @@ function startApp (conn) {
 
 	// logging
 
-	if (DEBUG) {
+	if (isSimulator) {
 
 		import ..debugging.TimestepInspector;
 		conn.addClient(new debugging.TimestepInspector());
@@ -139,7 +142,7 @@ function startApp (conn) {
 	import gc.API;
 	GC.buildApp('launchUI');
 
-	if (DEBUG) {
+	if (isSimulator) {
 		conn.setApp(GC.app);
 	}
 }
