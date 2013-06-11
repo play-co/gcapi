@@ -17,9 +17,9 @@
  */
 
 import device;
-var DEBUGGER = device.isSimulator;
+var isSimulator = device.isSimulator;
 
-if (DEBUGGER) {
+if (isSimulator) {
 	// prefix filenames in the debugger
 	jsio.__env.debugPath = function (path) { return 'http://' + window.location.host + '/' + path; }
 }
@@ -49,7 +49,7 @@ var uri = new std.uri(window.location);
 var mute = uri.hash('mute');
 CONFIG.isMuted = mute != undefined && mute != "false" && mute != "0" && mute != "no";
 
-if (DEBUGGER) {
+if (isSimulator) {
 	// device simulation
 
 	// simulate device chrome, input, and userAgent
@@ -86,7 +86,7 @@ function startApp (conn) {
 
 	// logging
 
-	if (DEBUGGER) {
+	if (isSimulator) {
 
 		import ..debugging.TimestepInspector;
 		conn.addClient(new debugging.TimestepInspector());
@@ -142,7 +142,7 @@ function startApp (conn) {
 	import gc.API;
 	GC.buildApp('launchUI');
 
-	if (DEBUGGER) {
+	if (isSimulator) {
 		conn.setApp(GC.app);
 	}
 }
