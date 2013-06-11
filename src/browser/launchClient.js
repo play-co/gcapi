@@ -16,7 +16,8 @@
  * along with the Game Closure SDK.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var DEBUGGER = false;
+import device;
+var DEBUGGER = device.isSimulator;
 
 if (DEBUGGER) {
 	// prefix filenames in the debugger
