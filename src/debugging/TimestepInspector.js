@@ -65,6 +65,12 @@ if (DEBUG) {
 		maxHeight: 'maxHeight',
 	};
 
+	var dispatchWindowEvent = function(eventName) {
+		var e = document.createEvent('Event');
+		e.initEvent(eventName, true, true);
+		window.dispatchEvent(e);
+	};
+
 	exports = Class(function () {
 		this.init = function (conn) {
 			this._overlay = new OverlayRenderer();
@@ -104,10 +110,10 @@ if (DEBUG) {
 				var app = GC.app;
 
 				if (this._homeScreen) {
-					GC._onShow && GC._onShow();
+					dispatchWindowEvent('pageshow');
 					app.engine.resume();
 				} else {
-					GC._onHide && GC._onHide();
+					dispatchWindowEvent('pagehide');
 					app.engine.pause();
 
 					var canvas = document.getElementsByTagName('canvas');
