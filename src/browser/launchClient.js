@@ -69,7 +69,9 @@ if (isSimulator) {
 	}
 
 	import ..debugging.connect;
-	debugging.connect.connect(null, startApp);
+	debugging.connect.connect(null, function (conn) {
+		setTimeout(bind(this, startApp, conn), 0);
+	});
 } else {
 	startApp();
 }
