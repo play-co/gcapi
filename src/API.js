@@ -209,29 +209,24 @@ exports = Class(lib.PubSub, function () {
 		view.engine.show();
 		view.engine.startLoop();
 
-		try {
-			view.initUI && view.initUI();
+		view.initUI && view.initUI();
 
-			var settings = view._settings || {};
-			var preload = settings.preload;
-			var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
-			if (preload && preload.length) {
-				var cb = new lib.Callback();
-				for (var i = 0, group; group = preload[i]; ++i) {
-					GC.resources.preload(group, cb.chain());
-				}
-
-				// note that hidePreloader takes a null cb argument to avoid
-				// forwarding the preloader result as the callback
-				if (autoHide) { cb.run(GC, 'hidePreloader', null); }
-				if (launch) { cb.run(launch); }
-			} else {
-				if (autoHide) { GC.hidePreloader(); }
-				launch && launch();
+		var settings = view._settings || {};
+		var preload = settings.preload;
+		var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
+		if (preload && preload.length) {
+			var cb = new lib.Callback();
+			for (var i = 0, group; group = preload[i]; ++i) {
+				GC.resources.preload(group, cb.chain());
 			}
-		} catch(error) {
-			this._onAppLoadError(error);
-			throw error;
+
+			// note that hidePreloader takes a null cb argument to avoid
+			// forwarding the preloader result as the callback
+			if (autoHide) { cb.run(GC, 'hidePreloader', null); }
+			if (launch) { cb.run(launch); }
+		} else {
+			if (autoHide) { GC.hidePreloader(); }
+			launch && launch();
 		}
 	};
 
