@@ -113,14 +113,26 @@ function startApp (conn) {
 						var err;
 						try {
 							var response = JSON.parse(xhr.responseText);
-							err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
+							err = response[1];
 						} catch(e) {
 							err = xhr.responseText;
 						}
 
 						console.log(err);
 						
-						document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
+						document.body.innerHTML = '<pre style=\'margin-left: 10px; font: bold 12px Consolas, "Bitstream Vera Sans Mono", Monaco, "Lucida Console", Terminal, monospace; color: #FFF;\'>'
+							+ '<span style="color:#AAF">' + filename + '</span>\n\n'
+							+ err.map(function (e) {
+									if (e.err) {
+										return '<span style="color:#F55">' + e.err.replace(/error - parse error.\s+/i, '') + '</span>\n'
+											+ ' <span style="color:#5F5">' + e.line + '</span>: '
+												+ ' <span style="color:#EEE">' + e.code[0] + '</span>\n'
+												+ new Array(('' + e.line).length + 5).join(' ') + e.code[1];
+									} else {
+										return'<span style="color:#F55">' + e.code.join('\n') + '</span>';
+									}
+								}).join('\n')
+							+ '</pre>';
 					} else if (xhr.status > 0) {
 						originalSyntax(code, filename);
 					}
