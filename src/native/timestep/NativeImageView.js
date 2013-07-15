@@ -21,6 +21,9 @@ exports.install = function () {
 	var setImage = proto.setImage;
 
 	proto.setImage = function (img, opts) {
+		if (opts && opts.forceReload && typeof img == 'string') {
+			NATIVE.gl.deleteTexture(img);
+		}
 		var retVal = setImage.apply(this, arguments);
 		
 		if (this._img) {
