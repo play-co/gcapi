@@ -25,7 +25,14 @@ NATIVE.events.registerHandler('inputPromptSubmit', function (evt) {
 	NATIVE.InputPrompt.publish('Submit', evt);
 });
 
-
 NATIVE.events.registerHandler('inputPromptCancel', function (evt) {
 	NATIVE.InputPrompt.publish('Cancel', evt);
+});
+
+NATIVE.events.registerHandler('inputPromptKeyUp', function (evt) {
+    NATIVE.InputPrompt.publish('KeyUp', evt);
+});
+
+NATIVE.events.registerHandler('inputPromptMove', function (evt) {
+    NATIVE.InputPrompt.publish('Move', evt);
 });
