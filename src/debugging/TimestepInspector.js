@@ -207,7 +207,7 @@ if (DEBUG) {
 			}
 
 			conn.onRequest.subscribe('GET_ROOT_UID', this, function (req) {
-				req.respond({uid: GC.app.view.uid});
+				req.respond({uid: GC.app.uid});
 			});
 
 			conn.onRequest.subscribe('GET_VIEW', this, function (req) {
