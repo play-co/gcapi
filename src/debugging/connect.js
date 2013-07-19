@@ -35,7 +35,7 @@ if (DEBUG) {
 				// in iframe
 				transport = 'postmessage';
 				connectOpts = {
-					port: '__debug_timestep_inspector_' + window.location.port + '__',
+					port: '__debug_timestep_inspector__',
 					win: window.parent
 				};
 			} else {
