@@ -65,6 +65,7 @@ var XMLHttpRequest = Class(function () {
 		this.readyState = state;
 		this.status = status;
 		this.responseText = response || null;
+        this.response = response || null;
 		if (typeof this.onreadystatechange === 'function') {
 			this.onreadystatechange();
 		}
