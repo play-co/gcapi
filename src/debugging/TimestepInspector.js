@@ -129,7 +129,7 @@ if (DEBUG) {
 			});
 
 			conn.onEvent.subscribe('BACK_BUTTON', this, function (evt) {
-				GLOBAL.NATIVE.onBackButton();
+				GLOBAL.NATIVE.backButton.emit('pressed');
 			});
 
 			conn.onRequest.subscribe('SCREENSHOT', this, function (req) {

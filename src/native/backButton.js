@@ -14,14 +14,9 @@
  * along with the Game Closure SDK.  If not, see <http://mozilla.org/MPL/2.0/>.
  */
 
-/**
- * Returns false by default. If you override, return true to
- * prevent default back button behavior.
- */
-NATIVE.onBackButton = function () {
-	return false;	
-};
+import lib.PubSub;
 
+NATIVE.backButton = new lib.PubSub();
 
 /**
  * Register back button event. Calls NATIVE.onBackButton, and
@@ -29,11 +24,15 @@ NATIVE.onBackButton = function () {
  * returns true.
  */
 NATIVE.events.registerHandler('backButton', function (evt) {
-	var result = NATIVE.onBackButton();
-	
-	logger.log('back button pushed');
+	if (NATIVE.onBackButton) {
+		var result = NATIVE.onBackButton();
+		
+		logger.log('back button pushed');
 
-	if ( result === false && typeof NATIVE.sendActivityToBack === 'function' ) {
-		NATIVE.sendActivityToBack();
+		if ( result === false && typeof NATIVE.sendActivityToBack === 'function' ) {
+			NATIVE.sendActivityToBack();
+		}
+	} else {
+		NATIVE.backButton.emit('pressed');
 	}
 });
