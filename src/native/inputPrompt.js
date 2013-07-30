@@ -36,3 +36,5 @@ NATIVE.events.registerHandler('inputPromptKeyUp', function (evt) {
 NATIVE.events.registerHandler('inputPromptMove', function (evt) {
     NATIVE.InputPrompt.publish('Move', evt);
 });
+
+NATIVE.events.registerHandler('keyboardScreenResize', bind(window, '__fireEvent', 'keyboardScreenResize'));
