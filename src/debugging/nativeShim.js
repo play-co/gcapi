@@ -122,6 +122,10 @@ exports.sound = {
 	}
 };
 
+exports.events = {
+	registerHandler: function() {}
+};
+
 exports.alerts = new lib.PubSub();
 merge(exports.alerts, {
 	onNotificationLoad: function () {},
