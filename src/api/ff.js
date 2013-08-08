@@ -455,12 +455,12 @@
 		define([], function () {
 			return ff;
 		});
-	// Node.js
-	} else if (typeof module !== 'undefined') {
-		module.exports = ff;
 	// js.io
 	} else if (typeof exports !== 'undefined') {
 		exports = ff;
+	// Node.js
+	} else if (typeof module !== 'undefined') {
+		module.exports = ff;
 	// browser
 	} else {
 		this.ff = ff;
