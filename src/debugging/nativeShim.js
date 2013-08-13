@@ -124,6 +124,7 @@ exports.sound = {
 
 exports.events = {
 	registerHandler: function() {}
+	sendEvent: function() {}
 };
 
 exports.alerts = new lib.PubSub();
