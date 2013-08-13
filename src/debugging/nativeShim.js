@@ -124,6 +124,9 @@ exports.sound = {
 
 exports.events = {
 	registerHandler: function() {}
+};
+
+exports.plugins = {
 	sendEvent: function() {}
 };
 
