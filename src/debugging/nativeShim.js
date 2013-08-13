@@ -123,7 +123,15 @@ exports.sound = {
 };
 
 exports.events = {
-	registerHandler: function() {}
+	registerHandler: function(eventName) {
+		logger.log('this would register an event handler for the ' + eventName + ' event on native');
+	}
+};
+
+exports.plugins = {
+	sendEvent: function(plugin, eventName) {
+		logger.log('this would send a ' + eventName + ' event to the ' + plugin + ' plugin on native');
+	}
 };
 
 exports.alerts = new lib.PubSub();
