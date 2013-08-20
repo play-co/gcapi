@@ -134,10 +134,6 @@ exports.plugins = {
 	}
 };
 
-exports.plugins = {
-	sendEvent: function() {}
-};
-
 exports.alerts = new lib.PubSub();
 merge(exports.alerts, {
 	onNotificationLoad: function () {},
