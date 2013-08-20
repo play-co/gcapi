@@ -26,10 +26,12 @@ if (DEBUG) {
 
 		this.traverse = function (f) { return GC.app && this.traverseView(f, GC.app.view); }
 		this.traverseView = function (f, view) {
+			var data = f(view);
+			var subviews = view.getSubviews().map(bind(this, 'traverseView', f));
 			return {
 				uid: view.uid,
-				data: f(view),
-				subviews: view.getSubviews().map(bind(this, 'traverseView', f))
+				data: data,
+				subviews: subviews.length ? subviews : undefined
 			};
 		}
 
@@ -45,20 +47,92 @@ if (DEBUG) {
 			return false;
 		}
 
+		var _isHighlighting = false;
+		var _highlightViews = [];
+
+		var _renderHighlights = (function () {
+			var prev = null;
+			var highlight = 0;
+			var fadeIn = true;
+			var FADE_IN_TIME = 1000;
+			return function (ctx) {
+				var now = Date.now();
+				var dt = 0;
+				if (prev) {
+					dt = now - prev;
+				}
+
+				prev = now;
+
+				if (fadeIn) {
+					highlight += dt;
+					if (highlight >= FADE_IN_TIME) {
+						fadeIn = false;
+						highlight = FADE_IN_TIME;
+					}
+				} else {
+					highlight -= dt;
+					if (highlight < 0) {
+						fadeIn = true;
+						highlight = 0;
+					}
+				}
+
+				_highlightViews.forEach(function (view) {
+					var pos = view.getPosition();
+					var gray = Math.round(255 * highlight / FADE_IN_TIME);
+					ctx.fillStyle = 'rgba(' + gray + ',' + gray + ',' + gray + ',' + gray / 512 + ')';
+					ctx.strokeStyle = 'rgba(' + gray + ',0,0,1)';
+					ctx.rotate(pos.r);
+					ctx.fillRect(pos.x, pos.y, pos.width, pos.height);
+					ctx.strokeRect(pos.x - 0.5, pos.y - 0.5, pos.width + 1, pos.height + 1);
+				});
+			}
+		})();
+
+		this.unhighlightViews = function () {
+			_highlightViews = [];
+		}
+
+		this.highlightView = function (view) {
+			if (_highlightViews.indexOf(view) == -1) {
+				_highlightViews.push(view);
+				if (!_isHighlighting) {
+					_isHighlighting = true;
+					GC.app.engine.on('Render', _renderHighlights);
+				}
+			}
+		}
+
+		this.unhighlightView = function (view) {
+			var i = _highlightViews.indexOf(view);
+			if (i != -1) {
+				_highlightViews.splice(i, 1);
+			}
+		}
+
 		this.getViewByID = function (uid) { return this.find(function (view) { return view.uid == uid; }); }
 
 		this.pack = function () { return GC.app && this.packView(GC.app.view); }
 		this.packView = function (view) {
 			import ui.ImageView;
+			import ui.ImageScaleView;
 			import ui.TextView;
 
 			return this.traverseView(function (view) {
 
-				if (view instanceof ui.ImageView) {
+				if (view instanceof ui.ImageView || view instanceof ui.ImageScaleView) {
 					var img = view.getImage();
 					if (img) {
-						var imageData = img.getMap();
-						imageData.type = 'ImageView';
+						var imageData = img.getOriginalURL() || img.getMap();
+					}
+
+					if (view.getScaleMethod) {
+						var scaleMethod = view.getScaleMethod();
+						if (/slice$/.test(scaleMethod)) {
+							var sourceSlices = view._opts.sourceSlices;
+							var destSlices = view._opts.destSlices;
+						}
 					}
 				}
 
@@ -68,15 +142,18 @@ if (DEBUG) {
 
 				var s = view.style;
 				return {
-					x: s.x,
-					y: s.y,
+					x: s.x != 0 ? s.x : undefined,
+					y: s.y != 0 ? s.y : undefined,
 					width: s.width,
 					height: s.height,
-					scale: s.scale,
+					scale: s.scale != 1 ? s.scale : undefined,
+					sourceSlices: sourceSlices,
+					destSlices: destSlices,
+					scaleMethod: scaleMethod,
 					image: imageData,
 					text: text,
-					visible: s.visible,
-					opacity: s.opacity,
+					visible: s.visible == false ? false : undefined,
+					opacity: s.opacity != 1 ? s.opacity : undefined,
 					tag: view.getTag()
 				};
 			}, view);
@@ -87,11 +164,17 @@ if (DEBUG) {
 			import ui.ImageView;
 			import ui.resource.Image;
 			import ui.TextView;
+			import ui.ScrollView;
 
 			function buildView (superview, data) {
 				var view;
 
 				var opts = data.data;
+				opts.x = opts.x || 0;
+				opts.y = opts.y || 0;
+				opts.visible = 'visible' in opts ? opts.visible : true;
+				opts.opacity = 'opacity' in opts ? opts.opacity : 1;
+				opts.scale = opts.scale || 1;
 				if (opts.image) {
 					var img = opts.image;
 					view = new ui.ImageView({
@@ -100,12 +183,13 @@ if (DEBUG) {
 						width: opts.width,
 						height: opts.height,
 						scale: opts.scale,
+						clip: opts.clip,
 
-						scaleMethod: img.scaleMethod,
-						slices: img.slices,
+						scaleMethod: opts.scaleMethod,
+						slices: opts.slices,
 
 						superview: superview,
-						image: new ui.resource.Image({
+						image: typeof img == 'string' ? img : new ui.resource.Image({
 							url: img.url,
 							sourceX: img.x,
 							sourceY: img.y,
@@ -121,9 +205,10 @@ if (DEBUG) {
 						tag: opts.tag
 					});
 				} else {
-					view = new (opts.text ? ui.TextView : ui.View)({
+					view = new (opts.text ? ui.TextView : (opts.clip ? ui.ScrollView : ui.View))({
 						x: opts.x,
 						y: opts.y,
+						clip: opts.clip,
 						width: opts.width,
 						height: opts.height,
 						text: opts.text,
@@ -137,8 +222,10 @@ if (DEBUG) {
 
 				view.uid = data.uid;
 
-				for (var i = 0, sub; sub = data.subviews[i]; ++i) {
-					buildView(view, sub);
+				if (data.subviews) {
+					for (var i = 0, sub; sub = data.subviews[i]; ++i) {
+						buildView(view, sub);
+					}
 				}
 			}
 
