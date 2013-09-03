@@ -150,4 +150,6 @@ exports.social = new lib.PubSub();
 //import .auth.conn;
 //auth.conn.webAutoLogin();
 
-if (!GLOBAL.NATIVE) { GLOBAL.NATIVE = exports; }
+if (!GLOBAL.NATIVE) {
+	GLOBAL.NATIVE = exports;
+}
