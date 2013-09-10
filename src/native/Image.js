@@ -14,12 +14,10 @@
  * along with the Game Closure SDK.  If not, see <http://mozilla.org/MPL/2.0/>.
  */
 
-"use import";
-
 import lib.PubSub;
+import util.setProperty;
 
 var Image = exports = Class(lib.PubSub, function (supr) {
-	import std.uri;
 
 	this.init = function (src, width, height, glname) {
 		this._src = src || "";
@@ -28,7 +26,10 @@ var Image = exports = Class(lib.PubSub, function (supr) {
 		this.__gl_name = glname || undefined;
 		this.complete = false;
 		this._fireReload = false;
-		this.__defineSetter__('src', function (value) {
+	}
+
+	util.setProperty(this, 'src', {
+		set: function (value) {
 			if (!value) {
 				logger.error('empty src set on an image!');
 				this._onerror();
@@ -37,10 +38,8 @@ var Image = exports = Class(lib.PubSub, function (supr) {
 
 			this._src = value;
 			NATIVE.gl.loadImage(this);
-		});
-		
-		this.__defineGetter__('src', function () { return this._src; });
-	}
+		}
+	});
 
 	this._onload = function (width, height, gl_name) {
 		logger.log('onload called with', width, height, gl_name);

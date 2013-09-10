@@ -14,27 +14,30 @@
  * along with the Game Closure SDK.  If not, see <http://mozilla.org/MPL/2.0/>.
  */
 
-"use import";
-
 import lib.PubSub;
 
-var InputPrompt = new Class(lib.PubSub, function (supr) {});
-NATIVE.InputPrompt = new InputPrompt();
+merge(NATIVE.input, lib.PubSub.prototype);
 
-NATIVE.events.registerHandler('inputPromptSubmit', function (evt) {
-	NATIVE.InputPrompt.publish('Submit', evt);
+console.log(NATIVE.input, NATIVE.input.openPrompt);
+
+NATIVE.events.registerHandler('InputPromptSubmit', function (evt) {
+	NATIVE.input.publish('InputPromptSubmit', evt);
 });
 
-NATIVE.events.registerHandler('inputPromptCancel', function (evt) {
-	NATIVE.InputPrompt.publish('Cancel', evt);
+NATIVE.events.registerHandler('InputKeyboardSubmit', function (evt) {
+	NATIVE.input.publish('Submit', evt);
 });
 
-NATIVE.events.registerHandler('inputPromptKeyUp', function (evt) {
-    NATIVE.InputPrompt.publish('KeyUp', evt);
+NATIVE.events.registerHandler('InputKeyboardCancel', function (evt) {
+	NATIVE.input.publish('Cancel', evt);
 });
 
-NATIVE.events.registerHandler('inputPromptMove', function (evt) {
-    NATIVE.InputPrompt.publish('Move', evt);
+NATIVE.events.registerHandler('InputKeyboardKeyUp', function (evt) {
+    NATIVE.input.publish('KeyUp', evt);
+});
+
+NATIVE.events.registerHandler('InputKeyboardFocusNext', function (evt) {
+    NATIVE.input.publish('FocusNext', evt);
 });
 
 NATIVE.events.registerHandler('keyboardScreenResize', bind(window, '__fireEvent', 'keyboardScreenResize'));

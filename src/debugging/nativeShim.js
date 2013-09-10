@@ -94,31 +94,42 @@ exports.profile = {
 	withPhoneNumber: function () { _withPhoneNumber.forward(arguments); }
 };
 
-
 exports.sound = {
 	playSound: function (url, volume) {
-		logger.log('this would play a sound on native');
+		logger.log('NATIVE shim: play a sound');
 	},
 	loadSound: function (url) {
-		logger.log('this would load a sound on native');
+		logger.log('NATIVE shim: load a sound');
 	},
 	pauseSound: function (url) {
-		logger.log('this would pause a sound on native');
+		logger.log('NATIVE shim: pause a sound');
 	},
 	stopSound: function (url) {
-		logger.log('this would stop a sound on native');
+		logger.log('NATIVE shim: stop a sound');
 	},
 	setVolume: function (url, volume) {
-		logger.log('this would set the volume of a sound on native');
+		logger.log('NATIVE shim: set the volume of a sound');
 	},
 	loadBackgroundMusic: function (url) {
-		logger.log('this would load background music on native');
+		logger.log('NATIVE shim: load background music');
 	},
 	playBackgroundMusic: function (url) {
-		logger.log('this would play background music on native');
+		logger.log('NATIVE shim: play background music');
 	},
 	registerMusic: function (url) {
-		logger.log('this would register background music on native');
+		logger.log('NATIVE shim: register background music');
+	}
+};
+
+exports.events = {
+	registerHandler: function(eventName) {
+		logger.log('NATIVE shim: register an event handler for the ' + eventName + ' event');
+	}
+};
+
+exports.plugins = {
+	sendEvent: function(plugin, eventName) {
+		logger.log('NATIVE shim: send a ' + eventName + ' event to the ' + plugin + ' plugin');
 	}
 };
 

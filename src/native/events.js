@@ -22,14 +22,19 @@ NATIVE.events.registerHandler = function (name, handler) {
 }
 
 NATIVE.events.dispatchEvent = function (evt) {
-	var e = evt;
-	if (typeof e == 'string') {
-		e = JSON.parse(e);
+	if (typeof evt == 'string') {
+		try {
+			evt = JSON.parse(evt);
+		} catch (e) {
+			logger.error('Parse error:', e);
+			logger.error(evt);
+			return;
+		}
 	}
 
-	var handler = handlers[e.name];
+	var handler = handlers[evt.name];
 	if (handler) {
-		handler(e);
+		handler(evt);
 	}
 }
 

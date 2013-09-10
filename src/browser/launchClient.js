@@ -20,6 +20,11 @@ var isSimulator = device.isSimulator;
 if (isSimulator) {
 	// prefix filenames in the debugger
 	jsio.__env.debugPath = function (path) { return 'http://' + window.location.host + '/' + path; }
+
+	// NATIVE will be simulated in this case
+} else {
+	device.simulatingMobileNative = true;
+	import gc.debugging.nativeShim;
 }
 
 // shims
