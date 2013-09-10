@@ -14,6 +14,10 @@
  * along with the Game Closure SDK.  If not, see <http://mozilla.org/MPL/2.0/>.
  */
 
+import lib.PubSub;
+
+merge(NATIVE.gl, lib.PubSub.prototype);
+
 var loadingImages = {};
 
 NATIVE.camera.getPicture = function (size, id) {
@@ -54,6 +58,8 @@ NATIVE.events.registerHandler('imageLoaded', function (evt) {
 	if (logURL.substring(0, 11) == 'data:image/') {
 		logURL = '<base64>';
 	}
+
+	NATIVE.gl.publish('imageLoaded', evt);
 
 	logger.debug('imageLoaded:', logURL, evt.originalWidth + 'x' + evt.originalHeight, '(' + evt.width + 'x' + evt.height + ')');
 
