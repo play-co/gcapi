@@ -129,7 +129,7 @@ if (DEBUG) {
 			});
 
 			conn.onEvent.subscribe('BACK_BUTTON', this, function (evt) {
-				GLOBAL.NATIVE.onBackButton();
+				GLOBAL.NATIVE.backButton.emit('pressed');
 			});
 
 			conn.onRequest.subscribe('SCREENSHOT', this, function (req) {
@@ -207,7 +207,7 @@ if (DEBUG) {
 			}
 
 			conn.onRequest.subscribe('GET_ROOT_UID', this, function (req) {
-				req.respond({uid: GC.app.view.uid});
+				req.respond({uid: GC.app.uid});
 			});
 
 			conn.onRequest.subscribe('GET_VIEW', this, function (req) {

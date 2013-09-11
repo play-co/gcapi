@@ -16,15 +16,10 @@
 
 var inputQueue = [];
 
-NATIVE.input = {
-	inputQueue: inputQueue
-};
-
 if (NATIVE.events.setResponder) {
 	NATIVE.events.setResponder(inputQueue);
-}	
-
-NATIVE.input.get = function () {
-	return inputQueue.splice(0, inputQueue.length);
 }
 
+NATIVE.input.getTouchEvents = function () {
+	return inputQueue.splice(0, inputQueue.length);
+}

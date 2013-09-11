@@ -52,7 +52,7 @@ var uri = new std.uri(window.location);
 var mute = uri.hash('mute');
 CONFIG.isMuted = mute != undefined && mute != "false" && mute != "0" && mute != "no";
 
-if (isSimulator) {
+if (DEBUG && isSimulator) {
 	// device simulation
 
 	// simulate device chrome, input, and userAgent
@@ -64,10 +64,10 @@ if (isSimulator) {
 			jsio("import preprocessors.cls");
 
 			import .simulateDevice;
-			var resImport = "import ..util.resolutions";
-			jsio.__jsio(resImport);
+			var resImport = "import ....static.util.resolutions";
+			var resolutions = jsio.__jsio(resImport);
 
-			simulateDevice.simulate(util.resolutions.get(sim_device));
+			simulateDevice.simulate(resolutions.get(sim_device));
 		} catch (e) {
 			logger.error(e);
 		}
@@ -75,6 +75,11 @@ if (isSimulator) {
 
 	import ..debugging.connect;
 	debugging.connect.connect(null, function (conn) {
+		conn.sendEvent('HANDSHAKE', {
+			type: 'simulator',
+			port: window.location.port // used to identify the simulator
+		});
+
 		setTimeout(bind(this, startApp, conn), 0);
 	});
 } else {
@@ -91,7 +96,7 @@ function startApp (conn) {
 
 	// logging
 
-	if (isSimulator) {
+	if (isSimulator && conn) {
 
 		import ..debugging.TimestepInspector;
 		conn.addClient(new debugging.TimestepInspector());
@@ -118,14 +123,26 @@ function startApp (conn) {
 						var err;
 						try {
 							var response = JSON.parse(xhr.responseText);
-							err = response[1].stderr.replace(/^stdin:(\d+):/mg, filename + ' line $1:');
+							err = response[1];
 						} catch(e) {
 							err = xhr.responseText;
 						}
 
 						console.log(err);
 						
-						document.body.innerHTML = '<pre style=\'font: bold 12px Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace; color: #FFF;\'>' + err + '</err>';
+						document.body.innerHTML = '<pre style=\'margin-left: 10px; font: bold 12px Consolas, "Bitstream Vera Sans Mono", Monaco, "Lucida Console", Terminal, monospace; color: #FFF;\'>'
+							+ '<span style="color:#AAF">' + filename + '</span>\n\n'
+							+ err.map(function (e) {
+									if (e.err) {
+										return '<span style="color:#F55">' + e.err.replace(/error - parse error.\s+/i, '') + '</span>\n'
+											+ ' <span style="color:#5F5">' + e.line + '</span>: '
+												+ ' <span style="color:#EEE">' + e.code[0] + '</span>\n'
+												+ new Array(('' + e.line).length + 5).join(' ') + e.code[1];
+									} else {
+										return'<span style="color:#F55">' + e.code.join('\n') + '</span>';
+									}
+								}).join('\n')
+							+ '</pre>';
 					} else if (xhr.status > 0) {
 						originalSyntax(code, filename);
 					}
@@ -147,7 +164,7 @@ function startApp (conn) {
 	import gc.API;
 	GC.buildApp('launchUI');
 
-	if (isSimulator) {
+	if (isSimulator && conn) {
 		conn.setApp(GC.app);
 	}
 }

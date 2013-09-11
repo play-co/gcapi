@@ -24,7 +24,7 @@ var testContactList = [
 // 	testContactList.push({id: i, name: username(), phones: [{number: '123456789'}]});
 // }
 
-exports.onBackButton = function () {};
+exports.backButton = new lib.PubSub();
 
 exports.dialogs = {
 	
@@ -93,7 +93,6 @@ exports.profile = {
 
 	withPhoneNumber: function () { _withPhoneNumber.forward(arguments); }
 };
-
 
 exports.sound = {
 	playSound: function (url, volume) {

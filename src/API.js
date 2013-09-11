@@ -67,6 +67,14 @@ exports = Class(lib.PubSub, function () {
 			}
 		}
 
+		var shortName = GLOBAL.CONFIG.shortName;
+		if (!isNaN(shortName[0])) {
+			throw new Error("Sorry, shortName can't start with a number! (This would break Android builds)");
+		}
+		if (shortName.indexOf('_') != -1) {
+			throw new Error("Sorry, shortName can't contain an underscore! (This would break iOS builds)");
+		}
+
 		if (GLOBAL.ADDON_SOCIAL && ADDON_SOCIAL) {
 			jsio("import GCSocial.GCSocial", {suppressErrors: true});
 			this.social = GCSocial.GCSocial;
@@ -75,7 +83,7 @@ exports = Class(lib.PubSub, function () {
 
 			this.social.init({
 				appID: GLOBAL.CONFIG.appID,
-				shortName: GLOBAL.CONFIG.shortName,
+				shortName: shortName,
 				inviteURLTemplate: GLOBAL.CONFIG.inviteURLTemplate,
 				endpoint: GLOBAL.CONFIG.servicesURL,
 			});
@@ -209,29 +217,24 @@ exports = Class(lib.PubSub, function () {
 		view.engine.show();
 		view.engine.startLoop();
 
-		try {
-			view.initUI && view.initUI();
+		view.initUI && view.initUI();
 
-			var settings = view._settings || {};
-			var preload = settings.preload;
-			var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
-			if (preload && preload.length) {
-				var cb = new lib.Callback();
-				for (var i = 0, group; group = preload[i]; ++i) {
-					GC.resources.preload(group, cb.chain());
-				}
-
-				// note that hidePreloader takes a null cb argument to avoid
-				// forwarding the preloader result as the callback
-				if (autoHide) { cb.run(GC, 'hidePreloader', null); }
-				if (launch) { cb.run(launch); }
-			} else {
-				if (autoHide) { GC.hidePreloader(); }
-				launch && launch();
+		var settings = view._settings || {};
+		var preload = settings.preload;
+		var autoHide = CONFIG.splash && (CONFIG.splash.autoHide !== false);
+		if (preload && preload.length) {
+			var cb = new lib.Callback();
+			for (var i = 0, group; group = preload[i]; ++i) {
+				GC.resources.preload(group, cb.chain());
 			}
-		} catch(error) {
-			this._onAppLoadError(error);
-			throw error;
+
+			// note that hidePreloader takes a null cb argument to avoid
+			// forwarding the preloader result as the callback
+			if (autoHide) { cb.run(GC, 'hidePreloader', null); }
+			if (launch) { cb.run(launch); }
+		} else {
+			if (autoHide) { GC.hidePreloader(); }
+			launch && launch();
 		}
 	};
 
