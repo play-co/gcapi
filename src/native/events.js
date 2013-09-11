@@ -23,6 +23,7 @@ NATIVE.events.registerHandler = function (name, handler) {
 
 NATIVE.events.dispatchEvent = function (evt) {
 	if (typeof evt == 'string') {
+		logger.log("dispatch event: " + evt);
 		try {
 			evt = JSON.parse(evt);
 		} catch (e) {
@@ -32,23 +33,27 @@ NATIVE.events.dispatchEvent = function (evt) {
 		}
 	}
 
+	logger.log("dispatch event2: " + evt);
 	var handler = handlers[evt.name];
 	if (handler) {
 		handler(evt);
 	}
+	logger.log("dispatch event3: " + evt);
+
 }
 
-jsio('import .input');
-jsio('import .plugins');
-jsio('import .overlay');
-jsio('import .purchase');
-jsio('import .pauseResume');
-jsio('import .offscreenBuffer');
-jsio('import .dialog');
-jsio('import .log');
-jsio('import .imageLoading');
-jsio('import .soundLoading');
 jsio('import .backButton');
-jsio('import .online');
+jsio('import .dialog');
+jsio('import .imageLoading');
+jsio('import .input');
 jsio('import .inputPrompt');
+jsio('import .log');
+jsio('import .offscreenBuffer');
+jsio('import .online');
+jsio('import .overlay');
+jsio('import .pauseResume');
+jsio('import .plugins');
+jsio('import .purchase');
 jsio('import .rotation');
+jsio('import .soundLoading');
+jsio('import .windowFocus');
