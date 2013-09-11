@@ -23,7 +23,6 @@ NATIVE.events.registerHandler = function (name, handler) {
 
 NATIVE.events.dispatchEvent = function (evt) {
 	if (typeof evt == 'string') {
-		logger.log("dispatch event: " + evt);
 		try {
 			evt = JSON.parse(evt);
 		} catch (e) {
@@ -33,12 +32,10 @@ NATIVE.events.dispatchEvent = function (evt) {
 		}
 	}
 
-	logger.log("dispatch event2: " + evt);
 	var handler = handlers[evt.name];
 	if (handler) {
 		handler(evt);
 	}
-	logger.log("dispatch event3: " + evt);
 
 }
 
