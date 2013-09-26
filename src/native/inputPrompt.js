@@ -40,4 +40,6 @@ NATIVE.events.registerHandler('InputKeyboardFocusNext', function (evt) {
     NATIVE.input.publish('FocusNext', evt);
 });
 
+
+
 NATIVE.events.registerHandler('keyboardScreenResize', bind(window, '__fireEvent', 'keyboardScreenResize'));

@@ -16,6 +16,16 @@
 
 handlers = {};
 
+NATIVE.call = function(method, args) {
+	json = {};
+	try {
+		json = JSON.parse(NATIVE._call(method, JSON.stringify(args)));
+	} catch (e) {
+		logger.log(e);
+	}
+	return json;
+}
+
 NATIVE.events = {};
 NATIVE.events.registerHandler = function (name, handler) {
 	handlers[name] = handler;
