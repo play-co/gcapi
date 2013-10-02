@@ -25,6 +25,7 @@ var Image = exports = Class(lib.PubSub, function (supr) {
 		this.height = height || undefined;
 		this.__gl_name = glname || undefined;
 		this.complete = false;
+		this._firedLoad = false;
 		this._fireReload = false;
 	}
 
@@ -47,13 +48,17 @@ var Image = exports = Class(lib.PubSub, function (supr) {
 		this.width = this.originalWidth = width;
 		this.height = this.originalHeight = height;
 		this.__gl_name = gl_name;
-		if (!this._fireReload) {
-			this._fireReload = true;
+		if (!this._firedLoad) {
+			this._firedLoad = true;
 			this.onload && this.onload();
 			this.publish('load', {type: 'load'});
-		} else {
+		}
+
+		if (this._fireReload) {
 			this.onreload && this.onreload();
 			this.publish('reload', {type: 'reload'});
+		} else {
+			this._fireReload = true;
 		}
 	}
 
@@ -68,8 +73,8 @@ var Image = exports = Class(lib.PubSub, function (supr) {
 	}
 
 	this.destroy = function () {
-		if (this.__gl_name) {
-			NATIVE.gl.deleteTexture(this.__gl_name);
+		if (this._src) {
+			NATIVE.gl.deleteTexture(this._src);
 		}
 	}
 

@@ -82,6 +82,6 @@ NATIVE.events.registerHandler('imageError', function (evt) {
 				image._onerror();
 			}
 		});
-		delete images[evt.url];
+		delete loadingImages[evt.url];
 	}
 });
