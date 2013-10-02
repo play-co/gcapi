@@ -159,11 +159,13 @@ if (DEBUG) {
 				_highlightViews.forEach(function (view) {
 					var pos = view.getPosition();
 					var gray = Math.round(255 * highlight / FADE_IN_TIME);
+					ctx.save();
 					ctx.fillStyle = 'rgba(' + gray + ',' + gray + ',' + gray + ',' + gray / 512 + ')';
 					ctx.strokeStyle = 'rgba(' + gray + ',0,0,1)';
 					ctx.rotate(pos.r);
 					ctx.fillRect(pos.x, pos.y, pos.width, pos.height);
 					ctx.strokeRect(pos.x - 0.5, pos.y - 0.5, pos.width + 1, pos.height + 1);
+					ctx.restore();
 				});
 			}
 		})();
