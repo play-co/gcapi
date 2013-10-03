@@ -15,6 +15,7 @@
  */
 
 import lib.PubSub;
+import device;
 
 merge(NATIVE.input, lib.PubSub.prototype);
 
@@ -40,6 +41,17 @@ NATIVE.events.registerHandler('InputKeyboardFocusNext', function (evt) {
     NATIVE.input.publish('FocusNext', evt);
 });
 
+var __keyboardIsOpen = false;
+NATIVE.events.registerHandler('keyboardScreenResize', function (evt) {
+	window.__fireEvent('keyboardScreenResize', evt);
 
-
-NATIVE.events.registerHandler('keyboardScreenResize', bind(window, '__fireEvent', 'keyboardScreenResize'));
+	if (evt.height < .75 * device.screen.height) {
+		if (!__keyboardIsOpen) {
+			__keyboardIsOpen = true;
+			window.__fireEvent('keyboardOpened', evt);
+		}
+	} else if (__keyboardIsOpen) {
+		__keyboardIsOpen = false;
+		window.__fireEvent('keyboardClosed', evt);
+	}
+});
