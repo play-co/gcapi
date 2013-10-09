@@ -82,7 +82,62 @@ if (DEBUG) {
 
 		this.initRemoteEval = function () {
 			import .remoteEval;
-			remoteEval.install(this);		
+			remoteEval.install(this);
 		}
 	});
+
+	if ('onerror' in window) {
+		window.addEventListener('error', function (e) {
+			import squill.Widget;
+			var errDialog = new squill.Widget({
+				parent: document.body,
+				style: {
+					position: 'absolute',
+					zIndex: 1000,
+					background: 'rgba(0, 0, 0, 0.5)',
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'center',
+					padding: '0px 20px',
+					top: '0px',
+					bottom: '0px',
+					left: '0px',
+					right: '0px',
+					opacity: 0,
+					transition: 'opacity 0.5s'
+				},
+				children: [
+					{
+						style: {
+							background: 'rgba(255, 255, 255, 0.85)',
+							padding: '10px 20px 20px',
+							borderRadius: '5px',
+							border: '3px solid red',
+							boxShadow: 'inset 0px 0px 3px black'
+						},
+						children: [
+							{tag: 'h3', text: 'an uncaught error occurred!'},
+							{tag: 'div', text: e.message, style: {fontFamily: 'monospace', wordWrap: 'break-word', marginBottom: '10px'}},
+							{id: 'halt', type: 'button', text: 'halt'},
+							{id: 'resume', type: 'button', text: 'resume'}
+						]
+					}
+				]
+			});
+
+			setTimeout(function () {
+				errDialog.getElement().style.opacity = 1;
+			}, 0);
+
+			errDialog.halt.on('Select', function () {
+				errDialog.remove();
+			});
+
+			errDialog.resume.on('Select', function () {
+				import timer;
+				timer.start();
+				errDialog.remove();
+			});
+		});
+	}
 }
