@@ -57,15 +57,6 @@ exports = Class(lib.PubSub, function () {
 	}
 
 	this.init = function (opts) {
-		if (DEBUG) {
-			if (GLOBAL.window && window.top) {
-				try {
-					window.top.GC = GLOBAL.GC;
-				} catch (e) {
-					//window.top is read-only in firefox
-				}
-			}
-		}
 
 		var shortName = GLOBAL.CONFIG.shortName;
 		if (!isNaN(shortName[0])) {
