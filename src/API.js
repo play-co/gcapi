@@ -62,9 +62,6 @@ exports = Class(lib.PubSub, function () {
 		if (!isNaN(shortName[0])) {
 			throw new Error("Sorry, shortName can't start with a number! (This would break Android builds)");
 		}
-		if (shortName.indexOf('_') != -1) {
-			throw new Error("Sorry, shortName can't contain an underscore! (This would break iOS builds)");
-		}
 
 		if (GLOBAL.ADDON_SOCIAL && ADDON_SOCIAL) {
 			jsio("import GCSocial.GCSocial", {suppressErrors: true});
