@@ -57,12 +57,6 @@ exports = Class(lib.PubSub, function () {
 	}
 
 	this.init = function (opts) {
-
-		var shortName = GLOBAL.CONFIG.shortName;
-		if (!isNaN(shortName[0])) {
-			throw new Error("Sorry, shortName can't start with a number! (This would break Android builds)");
-		}
-
 		if (GLOBAL.ADDON_SOCIAL && ADDON_SOCIAL) {
 			jsio("import GCSocial.GCSocial", {suppressErrors: true});
 			this.social = GCSocial.GCSocial;
@@ -71,7 +65,7 @@ exports = Class(lib.PubSub, function () {
 
 			this.social.init({
 				appID: GLOBAL.CONFIG.appID,
-				shortName: shortName,
+				shortName: GLOBAL.CONFIG.shortName,
 				inviteURLTemplate: GLOBAL.CONFIG.inviteURLTemplate,
 				endpoint: GLOBAL.CONFIG.servicesURL,
 			});
