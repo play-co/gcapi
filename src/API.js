@@ -115,6 +115,9 @@ exports = Class(lib.PubSub, function () {
 
 	GLOBAL.GC = new this.constructor();
 
+	import .PluginManager;
+	this.plugins = new PluginManager();
+
 	GC.Application = ui.StackView;
 
 	// this.track({

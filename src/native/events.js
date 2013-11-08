@@ -31,7 +31,8 @@ NATIVE.events.registerHandler = function (name, handler) {
 	handlers[name] = handler;
 }
 
-NATIVE.events.dispatchEvent = function (evt) {
+NATIVE.events.dispatchEvent = function (evt, id) {
+
 	if (typeof evt == 'string') {
 		try {
 			evt = JSON.parse(evt);
@@ -44,9 +45,8 @@ NATIVE.events.dispatchEvent = function (evt) {
 
 	var handler = handlers[evt.name];
 	if (handler) {
-		handler(evt);
+		handler(evt, id);
 	}
-
 }
 
 jsio('import .backButton');

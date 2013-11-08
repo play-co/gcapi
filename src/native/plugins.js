@@ -18,11 +18,51 @@ import lib.Callback;
 import lib.PubSub;
 
 var pluginsPubSub = new lib.PubSub();
+
 NATIVE.plugins.publish = bind(pluginsPubSub, 'publish');
 NATIVE.plugins.subscribe = bind(pluginsPubSub, 'subscribe');
 NATIVE.plugins.subscribeOnce = bind(pluginsPubSub, 'subscribeOnce');
 NATIVE.plugins.unsubscribe = bind(pluginsPubSub, 'unsubscribe');
 
-NATIVE.events.registerHandler('plugins', function (evt) {
-	NATIVE.plugins.publish('Plugins', evt.data);
+NATIVE.events.registerHandler('plugins', function (evt, id) {
+	if (id) {
+		var cb = _requestCbs[id];
+		delete _requestCbs[id];
+		cb && cb(evt.error, evt.response);
+	} else {
+		// TODO: probably this shouldn't be like this... maybe namespace by plugin name too, not just 'plugins'
+		NATIVE.plugins.publish('Plugins', evt.data);
+	}
 });
+
+NATIVE.events.registerHandler('pluginEvent', function (pluginName, evtName, data) {
+	var plugin = GC.plugins.getPlugin(pluginName);
+	if (plugin) {
+		plugin.publish(evtName, data);
+	} else {
+		logger.warn('plugin', pluginName, 'not found');
+	}
+});
+
+var _requestId = 0;
+var _requestCbs = {};
+NATIVE.plugins.sendRequest = function (pluginName, name, data, cb) {
+	if (typeof data == 'function') {
+		cb = data;
+		data = null;
+	}
+
+	var id = ++_requestId;
+	_requestCbs[id] = cb;
+
+	var dataStr;
+	if (data) {
+		try {
+			dataStr = JSON.stringify(data);
+		} catch (e) {
+			logger.error(e);
+		}
+	}
+
+	NATIVE.plugins._sendRequest.call(this, pluginName, name, dataStr || '{}', id);
+}
