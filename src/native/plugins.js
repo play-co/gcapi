@@ -35,12 +35,12 @@ NATIVE.events.registerHandler('plugins', function (evt, id) {
 	}
 });
 
-NATIVE.events.registerHandler('pluginEvent', function (pluginName, evtName, data) {
-	var plugin = GC.plugins.getPlugin(pluginName);
+NATIVE.events.registerHandler('pluginEvent', function (evt) {
+	var plugin = GC.plugins.getPlugin(evt.pluginName);
 	if (plugin) {
-		plugin.publish(evtName, data);
+		plugin.publish(evt.eventName, evt.data);
 	} else {
-		logger.warn('plugin', pluginName, 'not found');
+		logger.warn('plugin', evt.pluginName, 'not found');
 	}
 });
 
