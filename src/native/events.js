@@ -52,7 +52,6 @@ NATIVE.events.dispatchEvent = function (evt, id) {
 
 	var handler = handlers[evt.name];
 	if (handler) {
-		logger.log("got a handler");
 		handler(evt, id);
 	}
 }
