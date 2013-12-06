@@ -89,22 +89,34 @@ NATIVE.events.registerHandler('imageError', function (evt) {
 NATIVE.gl.makeCanvas = function (width, height, unloadListener) {
 	var textureData = NATIVE.gl.newTexture(width, height);
 
-	canvasImages[textureData.__gl_name] = unloadListener;
+	var url = textureData._src;
+	canvasImages[url] = unloadListener;
+
+	logger.log("{canvas-registry} Registering canvas:", url);
 
 	return textureData;
 }
 
+NATIVE.gl.forgetCanvas = function (url) {
+	logger.log("{canvas-registry} Forgetting canvas:", url);
+
+	var listener = canvasImages[url];
+	if (listener) {
+		delete canvasImages[url];
+	}
+}
+
 NATIVE.events.registerHandler('canvasFreed', function (evt) {
-	var name = evt.glName;
+	var url = evt.url;
 
-	logger.log("{canvas} Notifying of freed canvas url =", evt.url, "name =", name);
+	logger.log("{canvas-registry} Notifying of lost canvas:", url);
 
-	var listener = canvasImages[name];
+	var listener = canvasImages[url];
 	if (listener) {
 		if (typeof listener === "function") {
-			listener(evt.url, name);
+			listener(url);
 		}
-		delete canvasImages[name];
+		delete canvasImages[url];
 	}
 });
 
