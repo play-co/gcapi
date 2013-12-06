@@ -19,6 +19,7 @@ import lib.PubSub;
 merge(NATIVE.gl, lib.PubSub.prototype);
 
 var loadingImages = {};
+var canvasImages = {};
 
 NATIVE.camera.getPicture = function (size, id) {
 	size = size || 64;
@@ -53,7 +54,6 @@ NATIVE.gl.loadImage = function (image) {
 }
 
 NATIVE.events.registerHandler('imageLoaded', function (evt) {
-
 	var logURL = evt.url;
 	if (logURL.substring(0, 11) == 'data:image/') {
 		logURL = '<base64>';
@@ -85,3 +85,26 @@ NATIVE.events.registerHandler('imageError', function (evt) {
 		delete loadingImages[evt.url];
 	}
 });
+
+NATIVE.gl.makeCanvas = function (width, height, unloadListener) {
+	var textureData = NATIVE.gl.newTexture(width, height);
+
+	canvasImages[textureData.__gl_name] = unloadListener;
+
+	return textureData;
+}
+
+NATIVE.events.registerHandler('canvasFreed', function (evt) {
+	var name = evt.glName;
+
+	logger.log("{canvas} Notifying of freed canvas url =", evt.url, "name =", name);
+
+	var listener = canvasImages[name];
+	if (listener) {
+		if (typeof listener === "function") {
+			listener(evt.url, name);
+		}
+		delete canvasImages[name];
+	}
+});
+
