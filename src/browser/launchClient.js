@@ -50,10 +50,17 @@ var splash = document.getElementById('_GCSplash');
 if (splash) {
 	if (!CONFIG.splash.hide) {
 		CONFIG.splash.hide = function () {
-				splash.style.opacity = 0;
-				setTimeout(function () {
-					splash.parentNode.removeChild(splash);
-				}, 1000);
+				// timeout lengths are debateable. Perhaps they could
+				// be configurable. On one hand these time out lengths increase
+				// the length of time that nothing is happening. However, it also
+				// makes the transition into the game much smoother. The initial timeout
+				// is for images to pop in.
+				setTimeout(function() {
+					splash.style.opacity = 0;
+					setTimeout(function() {
+						splash.parentNode.removeChild(splash);
+					}, 1000);
+				}, 2000);
 			};
 	}
 }
