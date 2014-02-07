@@ -145,8 +145,31 @@ function startApp (conn) {
 							err = xhr.responseText;
 						}
 
-						console.log(err);
-						
+						if (console.group) {
+							console.group('%c' + filename + '\n', 'color: #33F; font-weight: bold');
+							err.forEach(function (e) {
+									if (e.err) {
+										console.log('%c' + e.err.replace(/error - parse error.\s+/i, ''), 'color: #F55');
+										console.log('%c' + e.line + ':%c' + e.code[0], 'color: #393', 'color: #444');
+										console.log(new Array(('' + e.line).length + 2).join(' ') + e.code[1]);
+									} else {
+										console.log('%c ' + e.code.join('\n'), 'color: #F55');
+									}
+								});
+							console.groupEnd();
+						} else {
+							console.log(filename);
+							err.forEach(function (e) {
+									if (e.err) {
+										console.log(e.err.replace(/error - parse error.\s+/i, ''));
+										console.log(e.line + ':' + e.code[0]);
+										console.log(new Array(('' + e.line).length + 2).join(' ') + e.code[1]);
+									} else {
+										console.log(e.code.join('\n'));
+									}
+								});
+						}
+
 						document.body.innerHTML = '<pre style=\'margin-left: 10px; font: bold 12px Consolas, "Bitstream Vera Sans Mono", Monaco, "Lucida Console", Terminal, monospace; color: #FFF;\'>'
 							+ '<span style="color:#AAF">' + filename + '</span>\n\n'
 							+ err.map(function (e) {
