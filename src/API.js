@@ -56,11 +56,13 @@ exports = Class(lib.PubSub, function () {
 		this.isFacebook = GLOBAL.CONFIG.isFacebookApp;
 	}
 
+	this.isKik = /Kik\/\d/.test(ua);
+
 	this.init = function (opts) {
 		if (GLOBAL.ADDON_SOCIAL && ADDON_SOCIAL) {
 			jsio("import GCSocial.GCSocial", {suppressErrors: true});
 			this.social = GCSocial.GCSocial;
-			
+
 			GLOBAL.gcsocial = this.social; // deprecated
 
 			this.social.init({
@@ -74,8 +76,12 @@ exports = Class(lib.PubSub, function () {
 		}
 
 		window.addEventListener('pageshow', bind(this, '_onShow'), false);
-
 		window.addEventListener('pagehide', bind(this, '_onHide'), false);
+
+		if (this.isKik && GLOBAL.cards && cards.browser) {
+			cards.browser.on('foreground', bind(this, '_onShow'));
+			cards.browser.on('background', bind(this, '_onHide'));
+		}
 
 		this.isOnline = navigator.onLine;
 
