@@ -123,7 +123,7 @@ exports.sound = {
 
 exports.events = {
 	registerHandler: function(eventName) {
-		logger.log('NATIVE shim: register an event handler for the ' + eventName + ' event');
+		// logger.log('NATIVE shim: register an event handler for the ' + eventName + ' event');
 	}
 };
 
