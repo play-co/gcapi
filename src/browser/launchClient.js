@@ -14,6 +14,10 @@
  * along with the Game Closure SDK.  If not, see <http://mozilla.org/MPL/2.0/>.
  */
 
+jsio.__env.fetch = function (filename) {
+	return false;
+};
+
 import device;
 var isSimulator = device.isSimulator;
 
@@ -122,22 +126,16 @@ function startApp (conn) {
 
 		var initDebugging = function () {
 			var env = jsio.__env;
-			
-			var originalSyntax = bind(env, env.checkSyntax);
-			var originalFetch = bind(env, env.fetch);
 
-			env.fetch = function (filename) {
-				logging.get('jsiocore').warn('LOADING EXTERNAL FILE:', filename);
-				return originalFetch.apply(this, arguments);
-			}
-			
+			var originalSyntax = bind(env, env.checkSyntax);
+
 			env.checkSyntax = function (code, filename) {
 				var xhr = new XMLHttpRequest();
 				xhr.open('POST', '/.syntax', false);
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				xhr.onreadystatechange = function () {
 					if (xhr.readyState != 4) { return; }
-				
+
 					if (xhr.status == 200 && xhr.responseText) {
 						var err;
 						try {
