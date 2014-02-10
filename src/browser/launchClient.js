@@ -27,8 +27,8 @@ if (isSimulator) {
 
 	// NATIVE will be simulated in this case
 } else {
-	device.simulatingMobileNative = true;
-	import gc.debugging.nativeShim;
+	// device.simulatingMobileNative = true;
+	// import gc.debugging.nativeShim;
 }
 
 // shims
