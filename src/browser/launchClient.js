@@ -83,13 +83,12 @@ if (DEBUG && isSimulator) {
 	if (sim_device) {
 		// hack to access SDK static resolutions file from a debug device
 		try {
-			jsio("import preprocessors.import");
-			jsio("import preprocessors.cls");
-
 			import .simulateDevice;
-			var resImport = "import ....static.util.resolutions";
-			var resolutions = jsio.__jsio(resImport);
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '/simulate/static/util/resolutions.js', false);
+			xhr.send();
 
+			var resolutions = eval("(function () { exports = {}; " + xhr.responseText + "; return exports; })()");
 			simulateDevice.simulate(resolutions.get(sim_device));
 		} catch (e) {
 			logger.error(e);
@@ -187,7 +186,7 @@ function startApp (conn) {
 						originalSyntax(code, filename);
 					}
 				}
-			
+
 				xhr.send('javascript=' + encodeURIComponent(code));
 			}
 		};
