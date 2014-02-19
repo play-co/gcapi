@@ -59,22 +59,6 @@ exports = Class(lib.PubSub, function () {
 	this.isKik = /Kik\/\d/.test(ua);
 
 	this.init = function (opts) {
-		if (GLOBAL.ADDON_SOCIAL && ADDON_SOCIAL) {
-			jsio("import GCSocial.GCSocial", {suppressErrors: true});
-			this.social = GCSocial.GCSocial;
-
-			GLOBAL.gcsocial = this.social; // deprecated
-
-			this.social.init({
-				appID: GLOBAL.CONFIG.appID,
-				shortName: GLOBAL.CONFIG.shortName,
-				inviteURLTemplate: GLOBAL.CONFIG.inviteURLTemplate,
-				endpoint: GLOBAL.CONFIG.servicesURL,
-			});
-
-			this.track = gcsocial.tracker;
-		}
-
 		window.addEventListener('pageshow', bind(this, '_onShow'), false);
 		window.addEventListener('pagehide', bind(this, '_onHide'), false);
 
@@ -113,10 +97,12 @@ exports = Class(lib.PubSub, function () {
 		// 	localStorage.setItem("campaignID", campaign)
 		// }
 
+		if (this.env == 'browser') { setTimeout(bind(this, '_onShow'), 0); }
 
 		if (CONFIG.version) {
 			logger.log('Version', CONFIG.version);
 		}
+
 	}
 
 	GLOBAL.GC = new this.constructor();
@@ -138,7 +124,7 @@ exports = Class(lib.PubSub, function () {
 
 	// import .OverlayAPI;
 	// GC.overlay = new OverlayAPI(this.env);
-	
+
 	var map;
 
 	try {
@@ -148,12 +134,11 @@ exports = Class(lib.PubSub, function () {
 	} catch (e) {
 		logger.warn("spritesheet map failed to parse", e);
 	}
-		
+
+
 	import ui.resource.loader;
 	GC.resources = ui.resource.loader;
 	GC.resources.setMap(map);
-
-	if (GC.env == 'browser') { setTimeout(bind(this, '_onShow'), 0); }
 
 	this._onHide = function () {
 		// signal to the app that the window is going away
