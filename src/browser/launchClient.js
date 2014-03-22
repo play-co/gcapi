@@ -61,10 +61,11 @@ if (splash) {
 				// is for images to pop in.
 				setTimeout(function() {
 					splash.style.opacity = 0;
+					splash.style.pointerEvents = 'none';
 					setTimeout(function() {
 						splash.parentNode.removeChild(splash);
-					}, 1000);
-				}, 2000);
+					}, 500);
+				}, 100);
 			};
 	}
 }
