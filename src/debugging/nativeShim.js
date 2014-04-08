@@ -16,6 +16,7 @@
 
 import lib.PubSub;
 import lib.Callback;
+import device;
 
 var testContactList = [
 ];
@@ -146,6 +147,10 @@ merge(exports.alerts, {
 });
 
 exports.social = new lib.PubSub();
+
+exports.isSimulator = function() {
+    return device.isSimulatingMobileNative;
+};
 
 //import .auth.conn;
 //auth.conn.webAutoLogin();
