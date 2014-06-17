@@ -33,6 +33,10 @@ exports.install = function (TeaLeaf, hostname) {
 	import .Audio;
 	Audio.install();
 
+    import .dom.DOMParser;
+    dom.DOMParser.install();
+
+
 	import platforms.native.Canvas;
 
 	if(NATIVE.device.native_info) {
