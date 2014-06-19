@@ -24,6 +24,7 @@ import ui.View;
 import ui.StackView;
 
 import device;
+var FontRenderer = device.get('FontRenderer');
 
 if (device.simulatingMobileNative) {
 	jsio('import .debugging.nativeShim');
@@ -194,6 +195,8 @@ exports = Class(lib.PubSub, function () {
 		view.engine.startLoop();
 
 		view.initUI && view.initUI();
+
+		FontRenderer.init();
 
 		var settings = view._settings || {};
 		var preload = settings.preload;
